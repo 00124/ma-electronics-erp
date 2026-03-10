@@ -102,7 +102,7 @@
                 'enabled_modules': @json($enabledModules),
                                 'installed_modules': @json($installedModules),
                                 'theme_mode': "{{ $themeMode }}",
-                                'appChecking': true,
+                                'appChecking': false,
                                 'app_version': "{{ $appVersion }}",
                                 'app_env': "{{ $appEnv }}",
                                 'app_type': "{{ $appType }}",
