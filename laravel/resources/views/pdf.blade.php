@@ -1,527 +1,482 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <title>Invoice</title>
     <style>
-        .invoice-box {
-            max-width: 800px;
-            margin: auto;
-
-            font-size: 14px;
-            line-height: 18px;
-            color: #555;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-            ;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Heebo', sans-serif;
-        }
-
-        .top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .top img {
-            width: 150px;
-        }
-
-        .invoice {
-            display: flex;
-            align-items: center;
-            width: 210px;
-            font-size: 15px;
-            justify-content: space-between;
-            font-weight: 500;
-            height: 25px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .costomer {
-            background: rgb(54, 54, 54);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 50px;
-            padding: 0 20px;
-        }
-
-        .costomer p:last-child {
-            margin-right: 250px;
-        }
-
-        .table-one {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #000;
             background: #fff;
-            padding: 0 20px 20px 20px;
-            border: 1px solid #a9a9a9;
-            margin-top: -10px;
         }
 
-        .table-one .avery {
-            width: 28%;
-            margin-right: 100px;
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 10mm 12mm 8mm 12mm;
+            position: relative;
         }
 
-        .example {
-            width: 30%;
-        }
-
-        .example h3 {
-            font-size: 17px;
-            height: 4px;
-        }
-
-        .avery h3 {
-            width: 87%;
-            margin-bottom: -13px;
-        }
-
-        .table-one p {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 0;
-        }
-
-        .table-one span {
-            display: block;
-            font-weight: 500;
-        }
-
-        .invoice-box table tr.item td {
-            border-right: 1px solid #a9a9a9;
-            border-bottom: 1px solid #a9a9a9;
-            padding: 10px;
-        }
-
-        .invoice-box table tr.item.item-two td {
-            border-right: 1px solid #fff;
-            border-bottom: none;
-        }
-
-        .invoice-box table tr.item.item-three td {
-            border-top: 1px solid #a9a9a9;
-        }
-
-        /** RTL **/
-        .invoice-box.rtl {
-            direction: rtl;
-        }
-
-        .table-two table thead {
-            background: rgb(54, 54, 54);
-            color: #fff;
-        }
-
-        .table-two thead th {
-            padding: 6px;
-        }
-
-        .table-two table {
+        /* ── HEADER ─────────────────────────────────── */
+        .header-table {
             width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
         }
-
-        tr.item.heading-tow {
-            background: #f8f8f8;
+        .header-left {
+            width: 50%;
+            vertical-align: top;
         }
-
-        tr.item.heading-tow {
-            background: #f8f8f8;
-        }
-
-
-
-
-        .invoice-box table tr.heading td {
-            background: #363636;
-            color: #fff;
-            padding: 6px;
-        }
-
-        .status {
-            border: 1px solid #a9a9a9;
-            margin-top: 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .table-three {
-            border-left: 1px solid #a9a9a9;
-            width: 100%;
-        }
-
-        .invoice-box table tr.item-four td {
-            border-right: 1px solid #a9a9a9;
-            border-bottom: 1px solid #a9a9a9;
-            text-align: end;
-            padding: 5px;
-        }
-
-        .invoice-box table tr.item-four td:last-child {
-            border-right: 1px solid #a9a9a9;
-            border-bottom: 1px solid #a9a9a9;
-            text-align: start;
-            padding: 5px;
-        }
-
-        .invoice-box table tr.item-four th {
-            border-right: 1px solid #a9a9a9;
-            border-bottom: 1px solid #a9a9a9;
-            text-align: end;
-            padding: 5px;
-        }
-
-        .status-due span {
+        .header-left img {
+            max-width: 130px;
+            max-height: 70px;
             display: block;
+            margin-bottom: 4px;
+        }
+        .company-name {
             font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 2px;
         }
-
-        .status-due {
-            padding-left: 10px;
+        .company-sub {
+            font-size: 11px;
+            color: #333;
+            line-height: 1.5;
         }
-
-        span.paid {
-            margin-top: 15px;
-        }
-
-        .status-due h4 {
-            color: #000;
-            font-size: 18px;
-            margin: 0 0 15px 0;
-        }
-
-        table {
-            width: 400px;
-        }
-
-        .signertuer span {
-            display: block;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .signertuer img {
-            width: 100px;
-            margin: 10px 0;
-        }
-
-        .signertuer {
-            display: flex;
-            align-items: center;
-            justify-content: end;
-            margin-right: 70px;
-        }
-
-        .divider {
-            line-height: 1.5715;
-            color: #000000d9;
-            border-top: 1px solid rgba(0, 0, 0, .7);
-            margin: 30px 0;
-        }
-
-        .trem span {
-            font-size: 13px;
-            font-weight: 700;
-            color: #000;
-        }
-
-        .trem p {
-            color: #000;
-        }
-
-        table.information {
-            width: 100%;
-        }
-
-
-        .text-right {
+        .header-right {
+            width: 50%;
+            vertical-align: top;
             text-align: right;
         }
-
-        .p-5 {
-            padding-bottom: 5px;
+        .bill-to-box {
+            display: inline-block;
+            text-align: left;
+            border: 1px solid #000;
+            padding: 6px 10px;
+            min-width: 200px;
+        }
+        .bill-to-title {
+            font-size: 11px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 4px;
+        }
+        .bill-to-row {
+            font-size: 11px;
+            line-height: 1.7;
+        }
+        .bill-to-row strong {
+            display: inline-block;
+            min-width: 90px;
         }
 
-        .space-10 {
-            padding-bottom: 10px;
+        /* ── INVOICE TITLE ──────────────────────────── */
+        .invoice-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin: 10px 0 6px 0;
+            text-transform: uppercase;
+        }
+        .invoice-meta-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 10px;
         }
-
-        .space-3 {
-            padding-bottom: 3px;
-            margin-bottom: 3px;
+        .invoice-meta-table th {
+            background: #000;
+            color: #fff;
+            border: 1px solid #000;
+            padding: 5px 8px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .invoice-meta-table td {
+            border: 1px solid #000;
+            padding: 5px 8px;
+            text-align: center;
+            font-size: 11px;
         }
 
-        .pl-15 {
-            padding-left: 15px;
+        /* ── PRODUCT TABLE ──────────────────────────── */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .items-table th {
+            background: #000;
+            color: #fff;
+            border: 1px solid #000;
+            padding: 6px 7px;
+            text-align: left;
+            font-size: 11px;
+        }
+        .items-table th.text-right,
+        .items-table td.text-right {
+            text-align: right;
+        }
+        .items-table th.text-center,
+        .items-table td.text-center {
+            text-align: center;
+        }
+        .items-table td {
+            border: 1px solid #000;
+            padding: 5px 7px;
+            font-size: 11px;
+            vertical-align: top;
+        }
+        .items-table tr:nth-child(even) td {
+            background: #f7f7f7;
+        }
+        .items-table .code-col { width: 9%; }
+        .items-table .desc-col { width: 38%; }
+        .items-table .qty-col  { width: 10%; }
+        .items-table .price-col{ width: 20%; }
+        .items-table .total-col{ width: 23%; }
+
+        /* ── PAYMENT + TOTALS ───────────────────────── */
+        .payment-section {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .payment-left {
+            width: 55%;
+            vertical-align: top;
+            padding-right: 8px;
+        }
+        .payment-right {
+            width: 45%;
+            vertical-align: top;
+        }
+        .payment-modes-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .payment-modes-table td {
+            border: 1px solid #000;
+            padding: 5px 8px;
+            font-size: 11px;
+        }
+        .payment-modes-table td:last-child {
+            text-align: right;
+            font-weight: bold;
+        }
+        .totals-box {
+            border: 2px solid #000;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .totals-box td {
+            border: 1px solid #000;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        .totals-box td:last-child {
+            text-align: right;
+            font-weight: bold;
+        }
+        .totals-box .grand-row td {
+            background: #000;
+            color: #fff;
+            font-weight: bold;
+            font-size: 13px;
         }
 
-        .pt-15 {
-            padding-top: 15px;
+        /* ── CUSTOMER BALANCE ───────────────────────── */
+        .balance-section {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+        }
+        .balance-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-decoration: underline;
+        }
+        .balance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .balance-table td {
+            padding: 3px 6px;
+            font-size: 11px;
+            width: 50%;
+        }
+        .balance-table td strong {
+            min-width: 80px;
+            display: inline-block;
         }
 
-        .pb-15 {
-            padding-bottom: 15px;
+        /* ── FOOTER ─────────────────────────────────── */
+        .footer-divider {
+            border-top: 1px solid #000;
+            margin: 10px 0 6px 0;
+        }
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .footer-table td {
+            vertical-align: top;
+            font-size: 10px;
+            color: #333;
+            padding: 0 4px;
+        }
+        .footer-left  { width: 38%; }
+        .footer-center{ width: 24%; text-align: center; }
+        .footer-right { width: 38%; text-align: right; }
+
+        .delivered-stamp {
+            display: inline-block;
+            border: 3px solid #000;
+            border-radius: 4px;
+            padding: 6px 14px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #000;
+            opacity: 0.25;
+            transform: rotate(-10deg);
+            margin-top: 4px;
         }
 
-        .mt-20 {
-            margin-top: 10px;
-        }
-
-        .clearfix {
-            display: block;
-            clear: both;
+        /* ── PRINT ───────────────────────────────────── */
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page { padding: 8mm 10mm; }
         }
     </style>
 </head>
-
 <body>
+<div class="page">
 
-    <div class="invoice-box">
-        <table class="company-details" cellpadding="0" cellspacing="0" style="width: 100%">
-            <tr>
-                <td style="padding-bottom: 20px;">
-                    <img src="{{ $warehouse->logo ? public_path("uploads/warehouses/".$warehouse->logo) : App\Classes\Common::getWarehouseImage('light', $company->id, 'public') }}" style="width: 200px; margin-top: 5px;" />
-                </td>
-                <td style="margin-left: 100px; padding-left: 30%; padding-bottom: 20px;">
-                    <table style="width: 100%">
-                        <tr style="text-align: left">
-                            <td class="space-10">
-                                <span style="font-size: 28px; font-weight: bolder">
-                                    @if($order->order_type == "purchases")
-                                    {{ $traslations['purchase_invoice'] }}
-                                    @elseif($order->order_type == "purchase-returns")
-                                    {{ $traslations['purchase_return_invoice'] }}
-                                    @elseif($order->order_type == "sales-returns")
-                                    {{ $traslations['sales_return_invoice'] }}
-                                    @elseif($order->order_type == "sales")
-                                    {{ $traslations['sales_invoice'] }}
-                                    @elseif($order->order_type == "quotations")
-                                    {{ $traslations['quotation_invoice'] }}
-                                    @endif
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <table cellpadding="0" cellspacing="0" style="width: 100%">
-                                <tr>
-                                    <td class="space-3" style="font-weight: bold;">
-                                        @if($order->order_type == "sales" || $order->order_type == "sales-returns" || $order->order_type == "quotations")
-                                        {{ $traslations['ref'] }}
-                                        @else
-                                        {{ $traslations['invoice'] }}
-                                        @endif
-                                    </td>
-                                    <td class="space-3 text-right">{{ $order->invoice_number }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="space-3" style="font-weight: bold;">{{ $traslations['order_date'] }}</td>
-                                    <td class="space-3 text-right">{{ $order->order_date->format($dateTimeFormat) }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="space-3" style="font-weight: bold;">{{ $traslations['order_status'] }}</td>
-                                    <td class="space-3 text-right">{{ $orderStatusText }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="space-3" style="font-weight: bold;">{{ $traslations['sold_by'] }}</td>
-                                    <td class="space-3 text-right">{{ $staffMember?->name }}</td>
-                                </tr>
-                            </table>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table class="information" cellpadding="4px" cellspacing="0" style="border: 1px solid #a9a9a9;">
-            <tr class="heading">
-                <td style="width: 40%; padding: 12px;">
-                    @if($order->order_type == "sales" || $order->order_type == "sales-returns")
-                    {{ $traslations['seller'] }}
-                    @else
-                    {{ $traslations['buyer'] }}
-                    @endif
-                </td>
-                <td style="width: 20%"></td>
-                <td style="width: 40%; padding-left: 15px;">
-                    @if($order->order_type == "sales" || $order->order_type == "sales-returns")
-                    {{ $traslations['buyer'] }}
-                    @else
-                    {{ $traslations['seller'] }}
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td class="pl-15 pt-15 pb-15" style="vertical-align:top;">
-                    <span style="font-size: 16px; font-weight: bold">{{ $warehouse->name }}</span> <br>
-                    <span>{{ $warehouse->address }}</span><br>
-                    <span>{{ $warehouse->email }}</span><br>
-                    <span>{{ $warehouse->phone }}</span>
-                </td>
-                <td class="pl-15 pt-15 pb-15" style="vertical-align:top;"></td>
-                <td class="pl-15 pt-15 pb-15" style="vertical-align:top;">
-                    @if($order->order_type == 'stock-transfers')
-                    <span style="font-size: 16px; font-weight: bold">{{ $order->warehouse->name }}</span><br />
-                    @if($order->warehouse->addres)
-                    {{ $order->warehouse->address  }} <br />
-                    @endif
-                    @if($order->warehouse->phone)
-                    {{ $order->warehouse->phone }} <br />
-                    @endif
-                    {{ $order->warehouse->email }}
-                    @else
-                    <span style="font-size: 16px; font-weight: bold">{{ $order->user->name }}</span><br />
-                    @if($order->user->address || $order->user->city || $order->user->zipcode)
-                    {{ $order->user->address .'' .  $order->user->city .''. $order->user->zipcode }} <br />
-                    @endif
-                    @if($order->user->phone)
-                    {{ $order->user->phone }} <br />
-                    @endif
-                    {{ $order->user->email }}
-                    @endif
-                </td>
-            </tr>
-        </table>
-        <div class="table-two">
-            <table cellpadding="4px" cellspacing="0">
-
-                <tbody>
-                    <tr class="heading">
-                        <td>#</td>
-                        <td>{{ $traslations['product'] }}</td>
-                        <td>{{ $traslations['quantity'] }}</td>
-                        @if($order->warehouse->show_mrp_on_invoice)
-                        <td>{{ $traslations['mrp'] }}</td>
-                        @endif
-                        <td>{{ $traslations['unit_price'] }}</td>
-                        <td>{{ $traslations['total'] }}</td>
-                    </tr>
-
-                    @foreach($order->items as $item)
-                    <tr class="item heading-tow">
-                        <td style="border-left: 1px solid #a9a9a9;">{{ $loop->iteration }}</td>
-                        <td>{{ $item->product->name }}</td>
-                        <td>{{ $item->quantity . ' ' . $item->unit->short_name }}</td>
-                        @if($order->warehouse->show_mrp_on_invoice)
-                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $item->mrp) }}</td>
-                        @endif
-                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $item->single_unit_price) }}</td>
-                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $item->subtotal) }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div class="status">
-            <table cellpadding="4px" cellspacing="0" style="width: 100%">
-                <tr>
-                    <td>
-                        <div class="status-due">
-                            <div>
-                                <h4>{{ $traslations['payment_status'] }} : {{ $paymentStatusText }}</h4>
-                                <span>{{ $traslations['paid_amount'] }} : {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->paid_amount) }}</span>
-                                <span>{{ $traslations['due_amount'] }}: {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}</span>
-                                <span class="paid">
-                                    {{ $traslations['payment_mode'] }}:
-                                    @if($order->orderPayments)
-                                    @foreach ($order->orderPayments as $currentOrderPayment)
-                                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $currentOrderPayment->amount) }}
-                                    @if($currentOrderPayment->payment && $currentOrderPayment->payment->paymentMode && $currentOrderPayment->payment->paymentMode->name)
-                                    ({{ $currentOrderPayment->payment->paymentMode->name }})
-                                    @endif
-                                    @endforeach
-                                    @else
-                                    -
-                                    @endif
-                                </span>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td style="padding: 0px;">
-                        <div class="table-three">
-                            <table cellpadding="0px" cellspacing="0" style="width: 100%">
-                                <tbody>
-
-
-                                    <tr class="item-four">
-                                        <td>{{ $traslations['subtotal'] }}</td>
-                                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->subtotal) }}</td>
-                                    </tr>
-                                    <tr class="item-four">
-                                        <td>{{ $traslations['tax'] }}</td>
-                                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->tax_amount) }} ({{ $order->tax_rate }}%)</td>
-                                    </tr>
-                                    <tr class="item-four">
-                                        <td>{{ $traslations['discount'] }}</td>
-                                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->discount) }}</td>
-                                    </tr>
-                                    <tr class="item-four">
-                                        <td>{{ $traslations['shipping'] }}</td>
-                                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->shipping) }}</td>
-                                    </tr>
-                                    <tr class="item-four">
-                                        <td style="border-bottom: 0px;"><b>{{ $traslations['total'] }}</b></td>
-                                        <td style="border-bottom: 0px;">{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->total) }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-
-        <div class="mt-20">
-            <div style="width: 65%; float: left;">
-                <p class="mt-20" style="font-weight: bold; font-size: 14px;">
-                    {{ $traslations['notes'] }}:
-                </p>
-                <p>{{ $order->notes }}</p>
-            </div>
-            <div style="width: 30%; float: right;">
-                <div class="signertuer">
-                    <div>
-                        <span>{{ $traslations['authorized_person'] }}</span>
-                        <img src="{{ $warehouse->signature_url }}" style="width: 200px; margin-top: 5px;" />
-                        </span>
-                    </div>
+    {{-- ══ HEADER ══════════════════════════════════════════ --}}
+    <table class="header-table">
+        <tr>
+            <td class="header-left">
+                <img src="{{ $warehouse->logo ? public_path('uploads/warehouses/'.$warehouse->logo) : App\Classes\Common::getWarehouseImage('light', $company->id, 'public') }}" alt="Logo" />
+                <div class="company-name">{{ $warehouse->name }}</div>
+                <div class="company-sub">
+                    @if($warehouse->address){{ $warehouse->address }}<br>@endif
+                    @if($warehouse->phone)<strong>Contact No:</strong> {{ $warehouse->phone }}<br>@endif
+                    @if($warehouse->email){{ $warehouse->email }}@endif
                 </div>
-            </div>
-            <div class="clearfix"></div>
-        </div>
+            </td>
+            <td class="header-right">
+                <div class="bill-to-box">
+                    <div class="bill-to-title">BILL TO:</div>
+                    @if($order->order_type !== 'stock-transfers')
+                        @php $cust = $order->user; @endphp
+                        @if(isset($customer) && $customer && $customer->customer_code ?? false)
+                        <div class="bill-to-row"><strong>Code:</strong> {{ $customer->customer_code }}</div>
+                        @endif
+                        <div class="bill-to-row"><strong>Name:</strong> {{ $cust->name ?? '-' }}</div>
+                        @if($cust->phone ?? false)
+                        <div class="bill-to-row"><strong>Phone:</strong> {{ $cust->phone }}</div>
+                        @endif
+                        @if($cust->address ?? false)
+                        <div class="bill-to-row"><strong>Address:</strong> {{ $cust->address }}</div>
+                        @endif
+                    @else
+                        <div class="bill-to-row"><strong>Warehouse:</strong> {{ $order->warehouse->name ?? '-' }}</div>
+                    @endif
+                    @if($staffMember)
+                    <div class="bill-to-row" style="margin-top:4px;"><strong>Salesman:</strong> {{ $staffMember->name }}</div>
+                    @endif
+                </div>
+            </td>
+        </tr>
+    </table>
 
+    {{-- ══ INVOICE TITLE ════════════════════════════════════ --}}
+    <div class="invoice-title">
+        @if($order->order_type == 'purchases') PURCHASE INVOICE
+        @elseif($order->order_type == 'purchase-returns') PURCHASE RETURN
+        @elseif($order->order_type == 'sales-returns') SALES RETURN
+        @elseif($order->order_type == 'quotations') QUOTATION
+        @else INVOICE
+        @endif
+    </div>
 
-        <div class="divider"></div>
-        <table cellpadding="4px" cellspacing="0" style="width: 100%">
+    <table class="invoice-meta-table">
+        <thead>
             <tr>
-                <td style="width: 50%; vertical-align:top;">
-                    <span style="font-weight: bold;">{{ $traslations['terms_condition'] }}</span>
-                    <p>{!! $warehouse->terms_condition !!}</p>
+                <th>Invoice Type</th>
+                <th>Invoice Number</th>
+                <th>Location</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @if($order->order_type == 'sales') INVCR
+                    @elseif($order->order_type == 'purchases') PUR
+                    @elseif($order->order_type == 'purchase-returns') PUR-RET
+                    @elseif($order->order_type == 'sales-returns') SALE-RET
+                    @elseif($order->order_type == 'quotations') QUOT
+                    @else {{ strtoupper($order->order_type) }}
+                    @endif
                 </td>
-                <td style="width: 50%; vertical-align:top;">
-                    <span style="font-weight: bold;">{{ $traslations['bank_details'] }}</span>
-                    <p>{!! $warehouse->bank_details !!}</p>
+                <td><strong>{{ $order->invoice_number }}</strong></td>
+                <td>{{ $warehouse->name }}</td>
+                <td>{{ $order->order_date->format('j F Y') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{-- ══ PRODUCT TABLE ════════════════════════════════════ --}}
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th class="code-col">Code</th>
+                <th class="desc-col">Description</th>
+                <th class="qty-col text-center">QTY</th>
+                <th class="price-col text-right">PRICE</th>
+                <th class="total-col text-right">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $totalQty = 0; @endphp
+            @foreach($order->items as $item)
+            @php $totalQty += $item->quantity; @endphp
+            <tr>
+                <td class="code-col">{{ $item->product->item_code ?? '-' }}</td>
+                <td class="desc-col">{{ $item->product->name ?? '-' }}</td>
+                <td class="qty-col text-center">{{ $item->quantity }} {{ $item->unit->short_name ?? '' }}</td>
+                <td class="price-col text-right">{{ App\Classes\Common::formatAmountCurrency($company->currency, $item->single_unit_price) }}</td>
+                <td class="total-col text-right">{{ App\Classes\Common::formatAmountCurrency($company->currency, $item->subtotal) }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    {{-- ══ PAYMENT + TOTALS ═════════════════════════════════ --}}
+    @php
+        $cashPaid   = 0;
+        $cardPaid   = 0;
+        $otherPaid  = 0;
+        $otherLabel = 'Other';
+        if ($order->orderPayments) {
+            foreach ($order->orderPayments as $op) {
+                $modeName = strtolower($op->payment->paymentMode->name ?? '');
+                if (str_contains($modeName, 'cash')) {
+                    $cashPaid += $op->amount;
+                } elseif (str_contains($modeName, 'card') || str_contains($modeName, 'credit')) {
+                    $cardPaid += $op->amount;
+                } else {
+                    $otherPaid  += $op->amount;
+                    $otherLabel  = $op->payment->paymentMode->name ?? 'Other';
+                }
+            }
+        }
+    @endphp
+
+    <table class="payment-section">
+        <tr>
+            <td class="payment-left">
+                <table class="payment-modes-table">
+                    <tr>
+                        <td>Cash Paid</td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $cashPaid) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Credit Card</td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $cardPaid) }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ $otherLabel }}</td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $otherPaid) }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Due Amount</strong></td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td class="payment-right">
+                <table class="totals-box">
+                    <tr>
+                        <td>Qty</td>
+                        <td>{{ $totalQty }}</td>
+                    </tr>
+                    @if($order->discount > 0)
+                    <tr>
+                        <td>Discount</td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->discount) }}</td>
+                    </tr>
+                    @endif
+                    @if($order->tax_amount > 0)
+                    <tr>
+                        <td>Tax ({{ $order->tax_rate }}%)</td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->tax_amount) }}</td>
+                    </tr>
+                    @endif
+                    <tr class="grand-row">
+                        <td>TOTAL</td>
+                        <td>{{ App\Classes\Common::formatAmountCurrency($company->currency, $order->total) }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    {{-- ══ CUSTOMER BALANCE ═════════════════════════════════ --}}
+    @if($order->order_type == 'sales' || $order->order_type == 'sales-returns')
+    <div class="balance-section">
+        <div class="balance-title">Customer Balance</div>
+        <table class="balance-table">
+            <tr>
+                <td><strong>Previous:</strong>
+                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $customer->details->due_amount ?? 0) }}
+                </td>
+                <td><strong>Current:</strong>
+                    {{ App\Classes\Common::formatAmountCurrency($company->currency, $order->due_amount) }}
                 </td>
             </tr>
         </table>
-
     </div>
-</body>
+    @endif
 
+    {{-- ══ NOTES ════════════════════════════════════════════ --}}
+    @if($order->notes)
+    <div style="font-size: 11px; margin-bottom: 8px; border: 1px solid #ccc; padding: 5px 8px;">
+        <strong>Notes:</strong> {{ $order->notes }}
+    </div>
+    @endif
+
+    {{-- ══ FOOTER ══════════════════════════════════════════ --}}
+    <div class="footer-divider"></div>
+    <table class="footer-table">
+        <tr>
+            <td class="footer-left">
+                @if($staffMember)<div><strong>{{ $staffMember->name }}</strong></div>@endif
+                @if($warehouse->email)<div>{{ $warehouse->email }}</div>@endif
+                @if($warehouse->website ?? false)<div>{{ $warehouse->website }}</div>@endif
+                @if($warehouse->facebook ?? false)<div>{{ $warehouse->facebook }}</div>@endif
+                <div>Printed: {{ now()->format('d-m-Y H:i') }}</div>
+            </td>
+            <td class="footer-center">
+                <div class="delivered-stamp">DELIVERED</div>
+            </td>
+            <td class="footer-right">
+                <div>Page 1 of 1</div>
+                @if($warehouse->terms_condition)
+                <div style="margin-top:4px; font-size:9px; color:#555;">{!! strip_tags($warehouse->terms_condition) !!}</div>
+                @endif
+            </td>
+        </tr>
+    </table>
+
+</div>
+</body>
 </html>
