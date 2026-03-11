@@ -265,7 +265,7 @@ import common from "../../../../common/composable/common";
 import apiAdmin from "../../../../common/composable/apiAdmin";
 
 export default {
-    props: ["visible", "data", "selectedProducts"],
+    props: ["visible", "data", "selectedProducts", "sellingWarehouseXid"],
     emits: ["closed", "success"],
     components: {
         CheckOutlined,
@@ -346,6 +346,7 @@ export default {
                 all_payments: allPaymentRecords.value,
                 product_items: props.selectedProducts,
                 details: props.data,
+                selected_warehouse_xid: props.sellingWarehouseXid || null,
             };
 
             addEditRequestAdmin({

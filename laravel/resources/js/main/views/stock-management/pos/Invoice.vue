@@ -58,6 +58,11 @@
                                     {{ order.staff_member.name }}
                                 </td>
                             </tr>
+                            <tr v-if="sellingWarehouseName">
+                                <td colspan="2" style="width: 100%">
+                                    <strong>Sold From:</strong> {{ sellingWarehouseName }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -348,9 +353,19 @@
                     </template>
                     {{ $t("common.print_invoice") }}
                 </a-button>
+                <a-button @click="gatePassVisible = true" style="margin-left: 4px;">
+                    Gate Pass
+                </a-button>
             </div>
         </template>
     </a-modal>
+
+    <GatePass
+        :visible="gatePassVisible"
+        :order="order"
+        :sellingWarehouseName="sellingWarehouseName"
+        @closed="gatePassVisible = false"
+    />
 </template>
 
 <script>
@@ -359,18 +374,20 @@ import { PrinterOutlined, SendOutlined } from "@ant-design/icons-vue";
 import common from "../../../../common/composable/common";
 import BarcodeGenerator from "../../../../common/components/barcode/BarcodeGenerator.vue";
 import QRcodeGenerator from "../../../../common/components/barcode/QRcodeGenerator.vue";
+import GatePass from "./GatePass.vue";
 import { notification } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 const posInvoiceCssUrl = window.config.pos_invoice_css;
 
 export default defineComponent({
-    props: ["visible", "order"],
+    props: ["visible", "order", "sellingWarehouseName"],
     emits: ["closed", "success"],
     components: {
         PrinterOutlined,
         BarcodeGenerator,
         QRcodeGenerator,
         SendOutlined,
+        GatePass,
     },
     setup(props, { emit }) {
         const { t } = useI18n();
@@ -384,6 +401,7 @@ export default defineComponent({
         const isSending = ref(false);
         const isVerified = ref("");
         const barcodeKey = ref(Date.now());
+        const gatePassVisible = ref(false);
 
         onMounted(() => {
             axiosAdmin.get("verified-email").then((response) => {
@@ -439,6 +457,7 @@ export default defineComponent({
             isSending,
             isVerified,
             barcodeKey,
+            gatePassVisible,
         };
     },
     watch: {

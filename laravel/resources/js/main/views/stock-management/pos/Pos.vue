@@ -102,6 +102,27 @@
                                         </span>
                                     </a-col>
                                 </a-row>
+                                <a-row class="mt-10">
+                                    <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                                        <a-select
+                                            v-model:value="selectedPosWarehouseXid"
+                                            placeholder="Select Selling Warehouse"
+                                            style="width: 100%"
+                                            optionFilterProp="label"
+                                            show-search
+                                            @change="onPosWarehouseChange"
+                                        >
+                                            <a-select-option
+                                                v-for="wh in posWarehouses"
+                                                :key="wh.xid"
+                                                :value="wh.xid"
+                                                :label="wh.name"
+                                            >
+                                                {{ wh.name }}
+                                            </a-select-option>
+                                        </a-select>
+                                    </a-col>
+                                </a-row>
                                 <a-row class="mt-20 mb-30">
                                     <a-col
                                         :xs="24"
@@ -590,7 +611,7 @@
                             :lg="6"
                             :md="12"
                             :xs="24"
-                            @click="selectSaleProduct(item)"
+                            @click="showStockPopup(item)"
                         >
                             <ProductCardNew
                                 :product="item"
@@ -709,7 +730,7 @@
                                 :md="8"
                                 :sm="12"
                                 :xs="12"
-                                @click="selectSaleProduct(item)"
+                                @click="showStockPopup(item)"
                             >
                                 <ProductCardNew
                                     :product="item"
@@ -1157,13 +1178,59 @@
         @success="payNowSuccess"
         :data="formData"
         :selectedProducts="selectedProducts"
+        :sellingWarehouseXid="selectedPosWarehouseXid"
     />
 
     <InvoiceModal
         :visible="printInvoiceModalVisible"
         :order="printInvoiceOrder"
+        :sellingWarehouseName="selectedPosWarehouseName"
         @closed="printInvoiceModalVisible = false"
     />
+
+    <!-- Stock Availability Popup -->
+    <a-modal
+        :open="stockPopupVisible"
+        :centered="true"
+        :maskClosable="true"
+        :title="stockPopupProduct ? 'Stock Availability: ' + stockPopupProduct.name : 'Stock Availability'"
+        width="480px"
+        @cancel="stockPopupVisible = false"
+    >
+        <a-spin :spinning="stockPopupLoading">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f0f0f0;">
+                        <th style="padding: 8px 12px; text-align: left; border: 1px solid #ddd;">Warehouse / Store</th>
+                        <th style="padding: 8px 12px; text-align: center; border: 1px solid #ddd;">Available Qty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in stockPopupData" :key="row.warehouse_xid">
+                        <td style="padding: 7px 12px; border: 1px solid #ddd;">{{ row.warehouse_name }}</td>
+                        <td style="padding: 7px 12px; text-align: center; border: 1px solid #ddd;">
+                            <a-tag :color="row.stock_quantity > 0 ? 'green' : 'red'">
+                                {{ row.stock_quantity }}
+                            </a-tag>
+                        </td>
+                    </tr>
+                    <tr v-if="!stockPopupLoading && stockPopupData.length === 0">
+                        <td colspan="2" style="padding: 12px; text-align: center; color: #999;">No warehouse data found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </a-spin>
+        <template #footer>
+            <a-button @click="stockPopupVisible = false">Cancel</a-button>
+            <a-button
+                type="primary"
+                :disabled="stockPopupLoading"
+                @click="addToCartFromPopup"
+            >
+                Add to Cart
+            </a-button>
+        </template>
+    </a-modal>
 </template>
 
 <script>
@@ -1242,7 +1309,61 @@ export default {
             appSetting,
             taxTypes,
             permsArray,
+            selectedWarehouse,
+            allWarehouses,
         } = common();
+
+        // Warehouse selector for POS
+        const posWarehouses = ref([]);
+        const selectedPosWarehouseXid = ref(null);
+        const selectedPosWarehouseName = ref("");
+
+        // Stock popup state
+        const stockPopupVisible = ref(false);
+        const stockPopupProduct = ref(null);
+        const stockPopupLoading = ref(false);
+        const stockPopupData = ref([]);
+
+        onMounted(() => {
+            axiosAdmin.get("pos/warehouses").then((resp) => {
+                posWarehouses.value = resp.data.warehouses || [];
+                if (posWarehouses.value.length > 0 && !selectedPosWarehouseXid.value) {
+                    const defaultW = posWarehouses.value.find(
+                        (w) => w.xid === (selectedWarehouse.value && selectedWarehouse.value.xid)
+                    ) || posWarehouses.value[0];
+                    selectedPosWarehouseXid.value = defaultW.xid;
+                    selectedPosWarehouseName.value = defaultW.name;
+                }
+            });
+        });
+
+        const onPosWarehouseChange = (xid) => {
+            const w = posWarehouses.value.find((wh) => wh.xid === xid);
+            selectedPosWarehouseName.value = w ? w.name : "";
+        };
+
+        const showStockPopup = (product) => {
+            stockPopupProduct.value = product;
+            stockPopupLoading.value = true;
+            stockPopupVisible.value = true;
+            stockPopupData.value = [];
+
+            axiosAdmin.post("pos/all-warehouse-stock", { product_xid: product.xid })
+                .then((resp) => {
+                    stockPopupData.value = resp.data.stock || [];
+                    stockPopupLoading.value = false;
+                })
+                .catch(() => {
+                    stockPopupLoading.value = false;
+                });
+        };
+
+        const addToCartFromPopup = () => {
+            stockPopupVisible.value = false;
+            if (stockPopupProduct.value) {
+                selectSaleProduct(stockPopupProduct.value);
+            }
+        };
         const { addEditRequestAdmin, loading, rules } = apiAdmin();
         const { t } = useI18n();
 
@@ -1317,7 +1438,11 @@ export default {
 
         const searchValueSelected = (value, option) => {
             const newProduct = option.product;
-            selectSaleProduct(newProduct);
+            if (!includes(selectedProductIds.value, newProduct.xid)) {
+                showStockPopup(newProduct);
+            } else {
+                selectSaleProduct(newProduct);
+            }
         };
 
         const selectSaleProduct = (newProduct) => {
@@ -1707,6 +1832,20 @@ export default {
             inputValueChanged,
 
             showMobileCart,
+
+            // Warehouse selector
+            posWarehouses,
+            selectedPosWarehouseXid,
+            selectedPosWarehouseName,
+            onPosWarehouseChange,
+
+            // Stock popup
+            stockPopupVisible,
+            stockPopupProduct,
+            stockPopupLoading,
+            stockPopupData,
+            showStockPopup,
+            addToCartFromPopup,
         };
     },
 };

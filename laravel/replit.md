@@ -59,10 +59,14 @@ The router source (`resources/js/main/router/index.js`) was missing the `var _0x
 - Translations: GRN keys added to `translations` DB table (grn.add, grn.grn_date, grn.user, grn.grn_status, etc.)
 - pageObject mapping: Added `grn` case to `resources/js/main/views/stock-management/purchases/fields.js`
 
-### POS Product Location — 🔲 Not Yet Implemented
-- No product location columns in database (products or product_details tables)
-- No existing Vue code for this feature
-- Needs clarification on scope from user
+### POS Enhancements — ✅ Implemented
+All six feature groups implemented. Key files changed:
+- `app/Http/Controllers/Api/PosController.php` — added `posWarehouses()` (GET /pos/warehouses) and `allWarehouseStock()` (POST /pos/all-warehouse-stock) methods; updated `savePosPayments()` to accept `selected_warehouse_xid` for stock deduction from chosen warehouse
+- `routes/web.php` — added routes for both new endpoints
+- `resources/js/main/views/stock-management/pos/Pos.vue` — warehouse selector dropdown (below customer picker), stock popup modal on product click, passes warehouse to PayNow and InvoiceModal
+- `resources/js/main/views/stock-management/pos/PayNow.vue` — accepts `sellingWarehouseXid` prop, passes to pos/save API
+- `resources/js/main/views/stock-management/pos/Invoice.vue` — shows "Sold From: [warehouse]", Gate Pass button, imports GatePass component
+- `resources/js/main/views/stock-management/pos/GatePass.vue` — NEW: printable gate pass modal with: Gate Pass #, Invoice #, Date, Warehouse, Customer, product table, Authorized By / Received By signature areas
 
 ## Database Tables (Key)
 - `orders` — orders with order_type: purchases, sales, grn, purchase-returns, sales-returns, stock-transfers, quotations

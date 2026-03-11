@@ -9,9 +9,11 @@ use App\Models\Order;
 use App\Models\OrderPayment;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ProductDetails;
 use App\Models\Settings;
 use App\Models\Tax;
 use App\Models\Unit;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
@@ -125,6 +127,38 @@ class PosController extends ApiBaseController
         return ApiResponse::make('Data fetched', $data);
     }
 
+    public function posWarehouses()
+    {
+        $warehouses = Warehouse::select('id', 'name')->get()->map(function ($w) {
+            return ['xid' => $w->xid, 'name' => $w->name];
+        });
+        return ApiResponse::make('Fetched', ['warehouses' => $warehouses]);
+    }
+
+    public function allWarehouseStock()
+    {
+        $request = request();
+        $productId = $this->getIdFromHash($request->product_xid);
+
+        $warehouses = Warehouse::select('id', 'name')->get();
+        $stockData = [];
+
+        foreach ($warehouses as $warehouse) {
+            $detail = ProductDetails::withoutGlobalScope('current_warehouse')
+                ->where('warehouse_id', $warehouse->id)
+                ->where('product_id', $productId)
+                ->first();
+
+            $stockData[] = [
+                'warehouse_xid' => $warehouse->xid,
+                'warehouse_name' => $warehouse->name,
+                'stock_quantity' => $detail ? (float) $detail->current_stock : 0,
+            ];
+        }
+
+        return ApiResponse::make('Fetched', ['stock' => $stockData]);
+    }
+
     public function addPosPayment(PosRequest $request)
     {
         return ApiResponse::make('Success');
@@ -136,6 +170,18 @@ class PosController extends ApiBaseController
         $request = request();
         $loggedInUser = user();
         $warehouse = warehouse();
+
+        // Use selected POS warehouse if provided
+        if ($request->has('selected_warehouse_xid') && $request->selected_warehouse_xid) {
+            $overrideWarehouseId = $this->getIdFromHash($request->selected_warehouse_xid);
+            if ($overrideWarehouseId) {
+                $overrideWarehouse = Warehouse::find($overrideWarehouseId);
+                if ($overrideWarehouse) {
+                    $warehouse = $overrideWarehouse;
+                }
+            }
+        }
+
         $orderDetails = $request->details;
         $oldOrderId = "";
         $posDefaultStatus = $request->order_type == 'quotations' ? 'pending' : $warehouse->default_pos_order_status;
