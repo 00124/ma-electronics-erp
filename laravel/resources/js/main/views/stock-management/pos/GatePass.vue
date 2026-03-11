@@ -51,11 +51,9 @@
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background: #e6f4ff;">
-                                <td style="padding: 5px; border: 1px solid #ccc; width: 5%">#</td>
+                                <td style="padding: 5px; border: 1px solid #ccc; width: 8%">#</td>
                                 <td style="padding: 5px; border: 1px solid #ccc;">Product Name</td>
-                                <td style="padding: 5px; border: 1px solid #ccc; text-align: center; width: 15%">Qty</td>
-                                <td style="padding: 5px; border: 1px solid #ccc; text-align: right; width: 20%">Unit Price</td>
-                                <td style="padding: 5px; border: 1px solid #ccc; text-align: right; width: 20%">Total</td>
+                                <td style="padding: 5px; border: 1px solid #ccc; text-align: center; width: 20%">Qty</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,28 +61,10 @@
                                 <td style="padding: 4px 5px; border: 1px solid #ccc;">{{ index + 1 }}</td>
                                 <td style="padding: 4px 5px; border: 1px solid #ccc;">{{ item.product ? item.product.name : '-' }}</td>
                                 <td style="padding: 4px 5px; border: 1px solid #ccc; text-align: center;">{{ item.quantity }} {{ item.unit ? item.unit.short_name : '' }}</td>
-                                <td style="padding: 4px 5px; border: 1px solid #ccc; text-align: right;">{{ formatAmountCurrency(item.unit_price) }}</td>
-                                <td style="padding: 4px 5px; border: 1px solid #ccc; text-align: right;">{{ formatAmountCurrency(item.subtotal) }}</td>
                             </tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="4" style="padding: 5px; border: 1px solid #ccc; text-align: right; font-weight: bold;">Section Total</td>
-                                <td style="padding: 5px; border: 1px solid #ccc; text-align: right; font-weight: bold;">{{ formatAmountCurrency(group.total) }}</td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
-
-                <!-- Grand total -->
-                <table style="width: 100%; border-collapse: collapse; margin-top: 8px;">
-                    <tbody>
-                        <tr>
-                            <td colspan="4" style="padding: 6px; border: 1px solid #333; text-align: right; font-weight: bold; font-size: 14px;">Grand Total</td>
-                            <td style="padding: 6px; border: 1px solid #333; text-align: right; font-weight: bold; font-size: 14px; width: 20%;">{{ formatAmountCurrency(order.total) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
 
                 <!-- Signature row -->
                 <table style="width: 100%; margin-top: 30px;">
