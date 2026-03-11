@@ -558,3 +558,144 @@
         margin: 0 auto !important;
     }
 }
+
+
+// ─── DASHBOARD SPECIFIC RESPONSIVE ─────────────────────────────────
+
+// Prevent gutter rows from causing horizontal scroll
+.dashboard-page-content-container {
+    overflow-x: hidden;
+    padding: 0 4px;
+}
+
+// Fix negative gutter overflow on mobile
+@media (max-width: 991px) {
+    .dashboard-page-content-container .ant-row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    // Reduce side margins in content area on mobile
+    .page-content-container .ant-card-body,
+    .dashboard-page-content-container .ant-card-body {
+        margin: 0 8px !important;
+    }
+
+    // Card header with tabs — stack title and tabs vertically
+    .ant-card-head {
+        flex-wrap: wrap;
+        height: auto !important;
+        min-height: 48px;
+        padding: 8px 12px !important;
+    }
+    .ant-card-head-wrapper {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .ant-card-head-title {
+        padding: 8px 0 !important;
+    }
+    .ant-card-extra {
+        padding: 4px 0 !important;
+        margin-left: 0 !important;
+        width: 100%;
+    }
+
+    // Tabs in card extra — scroll horizontally if needed
+    .ant-card-extra .ant-tabs {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+    .ant-card-extra .ant-tabs-nav {
+        margin-bottom: 0 !important;
+    }
+    .ant-card-extra .ant-tabs-tab {
+        padding: 6px 8px !important;
+        font-size: 12px !important;
+    }
+
+    // Stock history left stats + table stacking
+    .stock-history-stats {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        border-right: none !important;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 16px;
+        margin-bottom: 12px;
+    }
+    .col-border-right {
+        border-right: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        padding-bottom: 16px !important;
+        margin-bottom: 12px;
+    }
+
+    // Date range picker + buttons row wrapping
+    .ant-flex[justify="flex-end"] {
+        justify-content: flex-start !important;
+        margin-top: 8px;
+    }
+
+    // State/stat widget cards — 2 per row on tablet
+    .mt-30.mb-20 .ant-col[class*="ant-col-md-12"] {
+        padding: 6px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    // Remove all horizontal margins in page content on phone
+    .dashboard-page-content-container {
+        padding: 0 2px;
+    }
+
+    // mt-30 spacing reduced on mobile
+    .mt-30 {
+        margin-top: 16px !important;
+    }
+    .mb-20 {
+        margin-bottom: 10px !important;
+    }
+
+    // Card body padding minimal on phone
+    .ant-card-body {
+        padding: 12px !important;
+    }
+    .ant-card-head {
+        padding: 8px !important;
+    }
+
+    // Stat widget font sizes
+    .custom-card-widget h2 {
+        font-size: 16px !important;
+    }
+
+    // Dashboard table min-width for readability
+    .ant-table {
+        min-width: 480px;
+    }
+    .ant-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+
+// Dashboard history tabs in card body
+.dashboard-history-tabs {
+    margin-bottom: 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.dashboard-history-tabs .ant-tabs-nav {
+    margin-bottom: 0;
+    padding: 0 12px;
+}
+.dashboard-history-tabs .ant-tabs-tab {
+    font-size: 13px;
+    padding: 10px 12px;
+}
+@media (max-width: 576px) {
+    .dashboard-history-tabs .ant-tabs-tab {
+        font-size: 12px;
+        padding: 8px 8px;
+    }
+}

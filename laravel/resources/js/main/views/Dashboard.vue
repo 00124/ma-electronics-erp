@@ -208,43 +208,43 @@
                     :title="$t('dashboard.recent_stock_history')"
                     :bodyStyle="{ paddingTop: '0px' }"
                 >
-                    <template #extra>
-                        <a-tabs v-model:activeKey="activeOrderType">
-                            <a-tab-pane
-                                v-if="
-                                    permsArray.includes('sales_view') ||
-                                    permsArray.includes('admin')
-                                "
-                                key="sales"
-                                :tab="$t('menu.sales')"
-                            />
-                            <a-tab-pane
-                                v-if="
-                                    permsArray.includes('purchases_view') ||
-                                    permsArray.includes('admin')
-                                "
-                                key="purchases"
-                                :tab="$t('menu.purchases')"
-                            />
-                            <a-tab-pane
-                                v-if="
-                                    permsArray.includes(
-                                        'purchase_returns_view'
-                                    ) || permsArray.includes('admin')
-                                "
-                                key="purchase-returns"
-                                :tab="$t('menu.purchase_returns')"
-                            />
-                            <a-tab-pane
-                                v-if="
-                                    permsArray.includes('sales_returns_view') ||
-                                    permsArray.includes('admin')
-                                "
-                                key="sales-returns"
-                                :tab="$t('menu.sales_returns')"
-                            />
-                        </a-tabs>
-                    </template>
+                    <!-- Tabs moved into body for mobile friendliness -->
+                    <a-tabs v-model:activeKey="activeOrderType" class="dashboard-history-tabs">
+                        <a-tab-pane
+                            v-if="
+                                permsArray.includes('sales_view') ||
+                                permsArray.includes('admin')
+                            "
+                            key="sales"
+                            :tab="$t('menu.sales')"
+                        />
+                        <a-tab-pane
+                            v-if="
+                                permsArray.includes('purchases_view') ||
+                                permsArray.includes('admin')
+                            "
+                            key="purchases"
+                            :tab="$t('menu.purchases')"
+                        />
+                        <a-tab-pane
+                            v-if="
+                                permsArray.includes(
+                                    'purchase_returns_view'
+                                ) || permsArray.includes('admin')
+                            "
+                            key="purchase-returns"
+                            :tab="$t('menu.purchase_returns')"
+                        />
+                        <a-tab-pane
+                            v-if="
+                                permsArray.includes('sales_returns_view') ||
+                                permsArray.includes('admin')
+                            "
+                            key="sales-returns"
+                            :tab="$t('menu.sales_returns')"
+                        />
+                    </a-tabs>
+
                     <a-row>
                         <a-col
                             :xs="24"
@@ -332,11 +332,13 @@
                             </a-row>
                         </a-col>
                         <a-col :xs="24" :sm="24" :md="12" :lg="18" :xl="18">
-                            <OrderTable
-                                :orderType="activeOrderType"
-                                :filters="filters"
-                                :perPageItems="5"
-                            />
+                            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                                <OrderTable
+                                    :orderType="activeOrderType"
+                                    :filters="filters"
+                                    :perPageItems="5"
+                                />
+                            </div>
                         </a-col>
                     </a-row>
                 </a-card>
@@ -378,6 +380,7 @@
                     :bodyStyle="{ padding: '0px' }"
                     v-if="responseData && responseData.stockAlerts"
                 >
+                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                     <a-table
                         :columns="stockQuantityColumns"
                         :row-key="(record) => record.xid"
@@ -403,6 +406,7 @@
                             </template>
                         </template>
                     </a-table>
+                    </div>
                     <template
                         v-if="
                             permsArray.includes('warehouses_view') ||
@@ -431,6 +435,7 @@
                     :bodyStyle="{ padding: '0px' }"
                     v-if="responseData && responseData.topCustomers"
                 >
+                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                     <a-table
                         :columns="topCustomerColumns"
                         :row-key="(record) => record.customer_id"
@@ -449,6 +454,7 @@
                             </template>
                         </template>
                     </a-table>
+                    </div>
                     <template
                         v-if="
                             permsArray.includes('users_view') ||
