@@ -799,6 +799,7 @@ class Common
             'sales-returns' => 'SALE-RET-',
             'stock-transfers' => 'STK-TRANS-',
             'online-orders' => 'ONLI-TRANS-',
+            'grn' => 'GRN-',
         ];
 
         return $prefixs[$type] . $number;
