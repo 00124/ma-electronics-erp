@@ -1,6 +1,13 @@
 <template>
     <Div>
         <section id="components-layout-demo-responsive">
+            <!-- Mobile sidebar overlay -->
+            <div
+                v-if="innerWidth <= 991 && !menuCollapsed"
+                class="mobile-sidebar-overlay"
+                @click="closeSidebar"
+            ></div>
+
             <a-layout>
                 <LeftSidebarBar />
 
@@ -34,7 +41,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import { useStore } from "vuex";
 import TopBar from "./TopBar.vue";
 import LeftSidebarBar from "./LeftSidebar.vue";
 import { Div, MainArea, MainContentArea } from "./style";
@@ -49,20 +57,40 @@ export default {
         Div,
         MainArea,
         MainContentArea,
-
         AffixButton,
         LicenseDetails,
     },
     setup() {
         const { appSetting, menuCollapsed, selectedWarehouse, appType } = common();
+        const store = useStore();
+        const innerWidth = ref(window.innerWidth);
+
+        const handleResize = () => {
+            innerWidth.value = window.innerWidth;
+        };
+
+        const closeSidebar = () => {
+            store.commit("auth/updateMenuCollapsed", true);
+        };
+
+        onMounted(() => {
+            window.addEventListener("resize", handleResize);
+            if (window.innerWidth <= 991 && !menuCollapsed.value) {
+                store.commit("auth/updateMenuCollapsed", true);
+            }
+        });
+
+        onUnmounted(() => {
+            window.removeEventListener("resize", handleResize);
+        });
 
         return {
             appType,
             appSetting,
             menuCollapsed,
             selectedWarehouse,
-
-            innerWidth: window.innerWidth,
+            innerWidth,
+            closeSidebar,
         };
     },
 };
@@ -85,5 +113,15 @@ export default {
 
 [data-theme="dark"] .site-layout-sub-header-background {
     background: #141414;
+}
+
+.mobile-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 997;
 }
 </style>

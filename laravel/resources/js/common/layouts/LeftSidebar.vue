@@ -1006,7 +1006,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, onMounted, computed } from "vue";
+import { defineComponent, ref, watch, onMounted, onUnmounted, computed } from "vue";
 import { Layout } from "ant-design-vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
@@ -1092,12 +1092,21 @@ export default defineComponent({
         const store = useStore();
         const route = useRoute();
 
-        const innerWidth = window.innerWidth;
+        const innerWidth = ref(window.innerWidth);
         const openKeys = ref([]);
         const selectedKeys = ref([]);
         const mode = ref("inline");
 
+        const handleSidebarResize = () => {
+            innerWidth.value = window.innerWidth;
+        };
+
+        onUnmounted(() => {
+            window.removeEventListener("resize", handleSidebarResize);
+        });
+
         onMounted(() => {
+            window.addEventListener("resize", handleSidebarResize);
             var menuKey =
                 typeof route.meta.menuKey == "function"
                     ? route.meta.menuKey(route)
@@ -1135,7 +1144,7 @@ export default defineComponent({
                 menuKey = "appreciations";
             }
 
-            if (innerWidth <= 991) {
+            if (innerWidth.value <= 991) {
                 openKeys.value = [];
             } else if (
                 route.meta.menuParent == "staff" ||
@@ -1160,7 +1169,7 @@ export default defineComponent({
         };
 
         const menuSelected = () => {
-            if (innerWidth <= 991) {
+            if (innerWidth.value <= 991) {
                 store.commit("auth/updateMenuCollapsed", true);
             }
         };
@@ -1183,7 +1192,7 @@ export default defineComponent({
                     ? newVal.meta.menuKey(newVal)
                     : newVal.meta.menuKey;
 
-            if (innerWidth <= 991) {
+            if (innerWidth.value <= 991) {
                 openKeys.value = [];
             } else if (
                 newVal.meta.menuParent == "staff" ||
@@ -1227,7 +1236,7 @@ export default defineComponent({
                         ? route.meta.menuKey(route)
                         : route.meta.menuKey;
 
-                if (innerWidth <= 991 && menuCollapsed.value) {
+                if (innerWidth.value <= 991 && menuCollapsed.value) {
                     openKeys.value = [];
                 } else {
                     openKeys.value = menuCollapsed.value
@@ -1286,7 +1295,7 @@ export default defineComponent({
             selectedKeys,
             openKeys,
             logout,
-            innerWidth: window.innerWidth,
+            innerWidth,
 
             onOpenChange,
             menuSelected,

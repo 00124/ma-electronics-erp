@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { MenuOutlined, DownOutlined, ShoppingCartOutlined } from "@ant-design/icons-vue";
 import { useI18n } from "vue-i18n";
@@ -133,6 +133,11 @@ export default {
         const { locale, t } = useI18n();
         const themeMode = ref(window.config.theme_mode == "light" ? false : true);
         const themeModeLoading = ref(false);
+        const innerWidth = ref(window.innerWidth);
+
+        const handleTopbarResize = () => { innerWidth.value = window.innerWidth; };
+        onMounted(() => window.addEventListener("resize", handleTopbarResize));
+        onUnmounted(() => window.removeEventListener("resize", handleTopbarResize));
 
         const langSelected = async (lang) => {
             store.commit("auth/updateLang", lang);
@@ -184,7 +189,7 @@ export default {
             themeModeChanged,
             themeModeLoading,
 
-            innerWidth: window.innerWidth,
+            innerWidth,
         };
     },
 };

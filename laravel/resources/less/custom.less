@@ -385,3 +385,176 @@
     padding: 10px 16px;
     margin-top: 0px !important;
 }
+
+// ─── RESPONSIVE STYLES ─────────────────────────────────────────────
+
+// All ant-tables scroll horizontally on overflow
+.ant-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+// All ant-modals are capped and centered on small screens
+@media (max-width: 768px) {
+    .ant-modal {
+        max-width: calc(100vw - 16px) !important;
+        margin: 8px auto !important;
+    }
+    .ant-modal-body {
+        padding: 16px !important;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .ant-modal-footer {
+        padding: 8px 12px !important;
+    }
+}
+
+// Desktop: sidebar is always fixed 240px wide, content shifts right
+// Mobile: sidebar slides over as a drawer, content fills full width
+
+// Sidebar: slide off-screen when collapsed on tablet/mobile
+@media only screen and (max-width: 991px) {
+    .ant-layout-sider {
+        transition: transform 0.2s ease;
+    }
+    .ant-layout-sider.ant-layout-sider-collapsed {
+        transform: translateX(-240px) !important;
+        left: 0 !important;
+    }
+
+    // Page content padding on mobile
+    .page-content-container .ant-card-body {
+        padding-top: 16px !important;
+    }
+
+    // Breadcrumb header wrapping
+    .breadcrumb-header .ant-card-body {
+        padding: 8px !important;
+    }
+
+    // Page header buttons - smaller on mobile
+    .ant-page-header-heading-extra .ant-btn {
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+    }
+
+    // Filters row stacks vertically
+    .admin-page-filters .ant-col {
+        margin-bottom: 8px;
+    }
+
+    // Top bar
+    .ant-layout-header {
+        padding: 0 8px !important;
+    }
+
+    // Tables scroll horizontally
+    .ant-table-content {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .ant-table-body {
+        overflow-x: auto !important;
+    }
+
+    // Row wrapping in Ant grid
+    .ant-row {
+        flex-wrap: wrap;
+    }
+
+    // Dashboard stat cards - 2 per row on tablet
+    .ant-col-xs-24 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    // Full-width inputs on mobile
+    .ant-input,
+    .ant-select,
+    .ant-picker,
+    .ant-input-number {
+        width: 100% !important;
+    }
+
+    // Stack form rows
+    .ant-form-item {
+        margin-bottom: 12px;
+    }
+
+    // POS adjustments - product grid
+    .pos-product-card {
+        width: 100% !important;
+    }
+
+    // Stack all ant cols to full width
+    [class*="ant-col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    // Top bar lang/icons
+    .ant-space {
+        flex-wrap: wrap;
+    }
+
+    // Tables - ensure min-width for readability
+    .ant-table {
+        min-width: 500px;
+    }
+
+    // Page header
+    .ant-page-header {
+        padding: 8px 12px !important;
+    }
+    .ant-page-header-heading-title {
+        font-size: 14px !important;
+    }
+}
+
+// ─── POS TOUCH OPTIMIZATIONS ───────────────────────────────────────
+@media (max-width: 991px) {
+    // POS buttons larger for touch
+    .pos-left-wrapper .ant-btn,
+    .pos-right-wrapper .ant-btn {
+        min-height: 40px;
+        font-size: 14px;
+    }
+
+    // POS search inputs full width
+    .bill-filters .ant-input,
+    .bill-filters .ant-select {
+        width: 100% !important;
+    }
+
+    // POS product card grid - 2 columns on tablet
+    .pos-product-list {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    // POS product card grid - 1 column on phone
+    .pos-product-list {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+}
+
+// ─── PRINT PAGES (Invoice, Gate Pass) stay A4 ──────────────────────
+@media print {
+    .mobile-sidebar-overlay,
+    .ant-layout-sider,
+    .ant-layout-header,
+    .ant-modal-footer {
+        display: none !important;
+    }
+    .inv-page,
+    .gate-pass-content {
+        width: 210mm !important;
+        margin: 0 auto !important;
+    }
+}
