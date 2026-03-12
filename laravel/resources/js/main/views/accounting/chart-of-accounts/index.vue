@@ -126,7 +126,7 @@ export default defineComponent({
         const loadAccounts = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/accounting/coa');
+                const res = await axios.get('/api/v1/accounting/coa');
                 flatAccounts.value = res.data.data.flat || res.data.flat || [];
             } catch (e) { message.error('Failed to load accounts'); }
             finally { loading.value = false; }
@@ -149,10 +149,10 @@ export default defineComponent({
             saving.value = true;
             try {
                 if (editingId.value) {
-                    await axios.put(`/api/accounting/coa/${editingId.value}`, form.value);
+                    await axios.put(`/api/v1/accounting/coa/${editingId.value}`, form.value);
                     message.success('Account updated');
                 } else {
-                    await axios.post('/api/accounting/coa', form.value);
+                    await axios.post('/api/v1/accounting/coa', form.value);
                     message.success('Account created');
                 }
                 modalVisible.value = false;
@@ -163,7 +163,7 @@ export default defineComponent({
 
         const deleteAccount = async (id) => {
             try {
-                await axios.delete(`/api/accounting/coa/${id}`);
+                await axios.delete(`/api/v1/accounting/coa/${id}`);
                 message.success('Account deleted');
                 loadAccounts();
             } catch (e) { message.error(e.response?.data?.message || 'Cannot delete'); }

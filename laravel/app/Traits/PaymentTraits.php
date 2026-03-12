@@ -6,6 +6,7 @@ use App\Classes\Common;
 use App\Models\OrderPayment;
 use App\Models\Payment;
 use App\Models\PaymentMode;
+use App\Services\AccountingService;
 use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
 use Examyou\RestAPI\Exceptions\ResourceNotFoundException;
@@ -96,6 +97,10 @@ trait PaymentTraits
 
         // Updating Warehouse History
         Common::updateWarehouseHistory('payment', $payment, "add_edit");
+
+        // Auto-generate journal entry for this payment
+        $payment->refresh();
+        AccountingService::handlePayment($payment);
     }
 
     public function updating(Payment $payment)

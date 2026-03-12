@@ -93,6 +93,8 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::get('accounting/reports/profit-loss', ['as' => 'api.accounting.profit-loss', 'uses' => 'AccountingController@profitLoss']);
         ApiRoute::get('accounting/reports/balance-sheet', ['as' => 'api.accounting.balance-sheet', 'uses' => 'AccountingController@balanceSheet']);
         ApiRoute::get('accounting/reports/general-ledger', ['as' => 'api.accounting.general-ledger', 'uses' => 'AccountingController@generalLedger']);
+        ApiRoute::get('accounting/reports/customer-ledger', ['as' => 'api.accounting.customer-ledger', 'uses' => 'AccountingController@customerLedger']);
+        ApiRoute::get('accounting/reports/supplier-ledger', ['as' => 'api.accounting.supplier-ledger', 'uses' => 'AccountingController@supplierLedger']);
 
         // Imports
         ApiRoute::post('brands/import', ['as' => 'api.brands.import', 'uses' => 'BrandController@import']);

@@ -102,8 +102,8 @@ export default defineComponent({
         const load = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/accounting/reports/profit-loss', { params: { date_from: filters.value.date_from?.format('YYYY-MM-DD'), date_to: filters.value.date_to?.format('YYYY-MM-DD') } });
-                data.value = res.data;
+                const res = await axios.get('/api/v1/accounting/reports/profit-loss', { params: { date_from: filters.value.date_from?.format('YYYY-MM-DD'), date_to: filters.value.date_to?.format('YYYY-MM-DD') } });
+                data.value = res.data.data;
             } catch (e) {} finally { loading.value = false; }
         };
 

@@ -199,7 +199,7 @@ export default defineComponent({
         };
 
         const loadAccounts = async () => {
-            const res = await axios.get('/api/accounting/coa');
+            const res = await axios.get('/api/v1/accounting/coa');
             allAccounts.value = (res.data.flat || res.data.data?.flat || []).filter(a => a.parent_id);
         };
 
@@ -208,7 +208,7 @@ export default defineComponent({
             try {
                 const params = { per_page: pagination.value.pageSize, page: pagination.value.current };
                 if (dateRange.value?.[0]) { params.date_from = dateRange.value[0].format('YYYY-MM-DD'); params.date_to = dateRange.value[1].format('YYYY-MM-DD'); }
-                const res = await axios.get('/api/accounting/journal-entries', { params });
+                const res = await axios.get('/api/v1/accounting/journal-entries', { params });
                 entries.value = res.data.data || res.data;
                 pagination.value.total = res.data.total || entries.value.length;
             } catch (e) { message.error('Failed to load entries'); }
@@ -235,7 +235,7 @@ export default defineComponent({
                     description: entryForm.value.description,
                     lines: entryForm.value.lines.filter(l => l.account_id),
                 };
-                await axios.post('/api/accounting/journal-entries', payload);
+                await axios.post('/api/v1/accounting/journal-entries', payload);
                 message.success('Journal entry posted');
                 addModalVisible.value = false;
                 loadEntries();
@@ -246,7 +246,7 @@ export default defineComponent({
         const viewEntry = (record) => { viewingEntry.value = record; viewModalVisible.value = true; };
 
         const deleteEntry = async (id) => {
-            try { await axios.delete(`/api/accounting/journal-entries/${id}`); message.success('Deleted'); loadEntries(); }
+            try { await axios.delete(`/api/v1/accounting/journal-entries/${id}`); message.success('Deleted'); loadEntries(); }
             catch (e) { message.error('Cannot delete'); }
         };
 

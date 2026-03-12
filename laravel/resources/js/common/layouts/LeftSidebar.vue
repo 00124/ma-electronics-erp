@@ -593,6 +593,18 @@
                             @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.balance_sheet' }); }"
                             key="accounting_balance_sheet"
                         >Balance Sheet</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.general_ledger' }); }"
+                            key="accounting_general_ledger"
+                        >General Ledger</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.customer_ledger' }); }"
+                            key="accounting_customer_ledger"
+                        >Customer Ledger</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.supplier_ledger' }); }"
+                            key="accounting_supplier_ledger"
+                        >Supplier Ledger</a-menu-item>
                     </a-sub-menu>
 
                     <a-menu-item

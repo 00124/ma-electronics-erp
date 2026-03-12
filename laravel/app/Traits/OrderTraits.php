@@ -13,6 +13,7 @@ use App\Models\StockHistory;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WarehouseStock;
+use App\Services\AccountingService;
 use Carbon\Carbon;
 use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
@@ -240,6 +241,10 @@ trait OrderTraits
         }
 
         Common::updateOrderAmount($order->id);
+
+        // Auto-generate journal entry for this order
+        $order->refresh();
+        AccountingService::handleOrder($order);
 
         return $order;
     }

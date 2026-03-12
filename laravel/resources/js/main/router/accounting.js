@@ -68,6 +68,45 @@ export default [
                     menuKey: () => "accounting_balance_sheet",
                 },
             },
+            {
+                path: "/admin/accounting/reports/general-ledger",
+                component: () =>
+                    import(
+                        "../views/accounting/reports/general-ledger.vue"
+                    ),
+                name: "admin.accounting.general_ledger",
+                meta: {
+                    requireAuth: true,
+                    menuParent: "accounting",
+                    menuKey: () => "accounting_general_ledger",
+                },
+            },
+            {
+                path: "/admin/accounting/reports/customer-ledger",
+                component: () =>
+                    import(
+                        "../views/accounting/reports/customer-ledger.vue"
+                    ),
+                name: "admin.accounting.customer_ledger",
+                meta: {
+                    requireAuth: true,
+                    menuParent: "accounting",
+                    menuKey: () => "accounting_customer_ledger",
+                },
+            },
+            {
+                path: "/admin/accounting/reports/supplier-ledger",
+                component: () =>
+                    import(
+                        "../views/accounting/reports/supplier-ledger.vue"
+                    ),
+                name: "admin.accounting.supplier_ledger",
+                meta: {
+                    requireAuth: true,
+                    menuParent: "accounting",
+                    menuKey: () => "accounting_supplier_ledger",
+                },
+            },
         ],
     },
 ];

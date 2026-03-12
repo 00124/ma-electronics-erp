@@ -14,6 +14,7 @@ use App\Models\Settings;
 use App\Models\Tax;
 use App\Models\Unit;
 use App\Models\Warehouse;
+use App\Services\AccountingService;
 use Carbon\Carbon;
 use Examyou\RestAPI\ApiResponse;
 use Examyou\RestAPI\Exceptions\ApiException;
@@ -274,6 +275,10 @@ class PosController extends ApiBaseController
         }
 
         Common::updateOrderAmount($order->id);
+
+        // Auto-generate journal entry for POS sale
+        $order->refresh();
+        AccountingService::handleOrder($order);
 
         $savedOrder = Order::select('id', 'unique_id', 'invoice_number', 'user_id', 'staff_user_id', 'order_date', 'discount', 'shipping', 'tax_amount', 'subtotal', 'total', 'paid_amount', 'due_amount', 'total_items', 'total_quantity', 'order_type')
             ->with(['user:id,name,email,phone', 'items:id,order_id,product_id,unit_id,unit_price,subtotal,quantity,mrp,total_tax,warehouse_id', 'items.product:id,name', 'items.unit:id,name,short_name', 'items.warehouse:id,name', 'orderPayments:id,order_id,payment_id,amount', 'orderPayments.payment:id,payment_mode_id', 'orderPayments.payment.paymentMode:id,name', 'staffMember:id,name'])

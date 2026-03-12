@@ -1,0 +1,260 @@
+I am developing an ERP/POS system called **Stocklify** for a **Home Appliances & Electronics retail business**.
+
+Products include:
+
+LED TVs
+Refrigerators
+Air Conditioners
+Washing Machines
+Microwaves
+Kitchen Appliances
+Accessories
+
+The system is built using **Laravel + MySQL**.
+
+I need you to implement a **fully integrated Accounting System where every transaction is automatically connected to accounting**.
+
+The accounting must follow **double entry bookkeeping**.
+
+Every module must generate **automatic journal entries**.
+
+---
+
+1️⃣ CHART OF ACCOUNTS
+
+Create a hierarchical Chart of Accounts table.
+
+Table: chart_of_accounts
+
+Fields:
+
+id
+account_code
+account_name
+account_type (Asset, Liability, Equity, Income, Expense, COGS)
+parent_id
+description
+status
+created_at
+updated_at
+
+Parent accounts:
+
+10000 Assets
+20000 Liabilities
+30000 Equity
+40000 Revenue
+50000 Cost of Goods Sold
+60000 Expenses
+
+Add child accounts for Home Appliances business.
+
+Assets
+
+11001 Cash in Hand
+11002 Bank Account
+11003 Petty Cash
+
+12001 Accounts Receivable
+12002 Installment Customers
+
+13001 LED TV Inventory
+13002 Refrigerator Inventory
+13003 Washing Machine Inventory
+13004 Air Conditioner Inventory
+13005 Microwave Inventory
+13006 Small Appliances Inventory
+13007 Accessories Inventory
+
+Liabilities
+
+21001 Accounts Payable
+22001 Sales Tax Payable
+23001 Salaries Payable
+23002 Customer Advances
+
+Equity
+
+31001 Owner Capital
+31002 Owner Drawings
+
+Revenue
+
+41001 LED TV Sales
+41002 Refrigerator Sales
+41003 Washing Machine Sales
+41004 Air Conditioner Sales
+41005 Microwave Sales
+41006 Small Appliance Sales
+
+42001 Delivery Charges Income
+42002 Installation Charges
+42003 Warranty Income
+
+Cost of Goods Sold
+
+51001 Cost of LED TVs
+51002 Cost of Refrigerators
+51003 Cost of Washing Machines
+51004 Cost of Air Conditioners
+51005 Cost of Microwaves
+
+Expenses
+
+61001 Office Salaries
+61002 Shop Rent
+61003 Electricity Expense
+61004 Internet Expense
+62001 Advertising Expense
+63001 Shop Maintenance
+64001 Delivery Expense
+64002 Vehicle Fuel
+65001 Bank Charges
+
+---
+
+2️⃣ JOURNAL ENTRY SYSTEM
+
+Create tables:
+
+journal_entries
+journal_entry_lines
+
+Fields:
+
+journal_entries
+
+id
+date
+reference_no
+description
+
+journal_entry_lines
+
+id
+journal_entry_id
+account_id
+debit
+credit
+
+The system must enforce:
+
+Total Debit = Total Credit.
+
+---
+
+3️⃣ ACCOUNTING INTEGRATION
+
+Connect all ERP modules with accounting.
+
+SALES TRANSACTION
+
+When a product is sold:
+
+Debit Cash or Accounts Receivable
+Credit Sales Revenue
+
+COGS ENTRY
+
+Debit Cost of Goods Sold
+Credit Inventory
+
+PURCHASE TRANSACTION
+
+Debit Inventory
+Credit Accounts Payable
+
+SUPPLIER PAYMENT
+
+Debit Accounts Payable
+Credit Cash/Bank
+
+CUSTOMER PAYMENT
+
+Debit Cash/Bank
+Credit Accounts Receivable
+
+SALES RETURN
+
+Debit Sales Return
+Credit Cash/Receivable
+
+PURCHASE RETURN
+
+Debit Accounts Payable
+Credit Inventory
+
+---
+
+4️⃣ INVENTORY ACCOUNTING
+
+Inventory accounts must update automatically when:
+
+Purchase increases stock
+Sales reduce stock
+Returns adjust stock
+Stock adjustments recorded
+
+---
+
+5️⃣ FINANCIAL REPORTS
+
+Generate these reports using journal entries.
+
+Trial Balance
+Profit & Loss
+Balance Sheet
+General Ledger
+Customer Ledger
+Supplier Ledger
+Stock Valuation
+
+Reports must allow filtering by:
+
+Date range
+Warehouse
+Account
+
+---
+
+6️⃣ USER INTERFACE
+
+Add menu:
+
+Accounting
+
+Chart of Accounts
+Journal Entries
+General Ledger
+Trial Balance
+Profit & Loss
+Balance Sheet
+
+Display Chart of Accounts in hierarchical tree structure.
+
+---
+
+7️⃣ MULTI WAREHOUSE SUPPORT
+
+The system must support:
+
+Multiple warehouses
+Inventory per warehouse
+Accounting entries linked with warehouse transactions
+
+---
+
+8️⃣ SYSTEM STRUCTURE
+
+Generate:
+
+Laravel migrations
+Models
+Controllers
+Routes
+Blade UI pages
+Seeders for default accounts
+
+Follow ERP accounting architecture similar to **Odoo or ERPNext**.
+
+Make sure every financial transaction is recorded in the journal automatically.

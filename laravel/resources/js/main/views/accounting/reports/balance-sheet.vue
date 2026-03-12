@@ -105,8 +105,8 @@ export default defineComponent({
         const load = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/accounting/reports/balance-sheet', { params: { as_of: filters.value.as_of?.format('YYYY-MM-DD') } });
-                data.value = res.data;
+                const res = await axios.get('/api/v1/accounting/reports/balance-sheet', { params: { as_of: filters.value.as_of?.format('YYYY-MM-DD') } });
+                data.value = res.data.data;
             } catch (e) {} finally { loading.value = false; }
         };
 

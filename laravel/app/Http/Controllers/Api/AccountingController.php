@@ -6,11 +6,28 @@ use App\Http\Controllers\ApiBaseController;
 use App\Models\ChartOfAccount;
 use App\Models\JournalEntry;
 use App\Models\JournalEntryLine;
+use App\Models\Order;
+use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Examyou\RestAPI\ApiResponse;
+use Examyou\RestAPI\Exceptions\ApiException;
 use Illuminate\Support\Facades\DB;
 
 class AccountingController extends ApiBaseController
 {
+    // ─── RESPONSE HELPERS ─────────────────────────────────────────────────
+
+    protected function sendResponse($data, $message)
+    {
+        return ApiResponse::make($message, $data);
+    }
+
+    protected function sendError($message)
+    {
+        throw new ApiException($message);
+    }
+
     // ─── CHART OF ACCOUNTS ────────────────────────────────────────────────
 
     public function coaIndex(Request $request)
@@ -311,6 +328,154 @@ class AccountingController extends ApiBaseController
         return $this->sendResponse([
             'account'   => $account,
             'lines'     => $lines,
+            'date_from' => $dateFrom,
+            'date_to'   => $dateTo,
+        ], '');
+    }
+
+    // ─── CUSTOMER LEDGER ──────────────────────────────────────────────────
+
+    public function customerLedger(Request $request)
+    {
+        $companyId = company()->id;
+        $dateFrom  = $request->date_from ?? '2000-01-01';
+        $dateTo    = $request->date_to   ?? now()->toDateString();
+        $userId    = $request->user_id   ?? null;
+
+        // Sales (debit: increases balance owed by customer)
+        $salesQuery = Order::select(
+                'order_date as date',
+                'invoice_number as reference',
+                DB::raw("'Sale' as type"),
+                'total as debit',
+                DB::raw('0 as credit'),
+                'user_id'
+            )
+            ->where('company_id', $companyId)
+            ->whereIn('order_type', ['sales'])
+            ->whereBetween('order_date', [$dateFrom, $dateTo]);
+
+        // Sales Returns (credit: reduces balance owed)
+        $returnQuery = Order::select(
+                'order_date as date',
+                'invoice_number as reference',
+                DB::raw("'Sales Return' as type"),
+                DB::raw('0 as debit'),
+                'total as credit',
+                'user_id'
+            )
+            ->where('company_id', $companyId)
+            ->whereIn('order_type', ['sales-returns'])
+            ->whereBetween('order_date', [$dateFrom, $dateTo]);
+
+        // Payments in (credit: customer paid, reduces balance owed)
+        $paymentQuery = Payment::select(
+                DB::raw('DATE(date) as date'),
+                'payment_number as reference',
+                DB::raw("'Payment Received' as type"),
+                DB::raw('0 as debit'),
+                'amount as credit',
+                'user_id'
+            )
+            ->where('company_id', $companyId)
+            ->where('payment_type', 'in')
+            ->whereBetween(DB::raw('DATE(date)'), [$dateFrom, $dateTo]);
+
+        if ($userId) {
+            $salesQuery->where('user_id', $userId);
+            $returnQuery->where('user_id', $userId);
+            $paymentQuery->where('user_id', $userId);
+        }
+
+        $rows = $salesQuery->union($returnQuery)->union($paymentQuery)
+            ->orderBy('date')->orderBy('reference')
+            ->get();
+
+        $runningBalance = 0;
+        foreach ($rows as $row) {
+            $runningBalance += ($row->debit - $row->credit);
+            $row->running_balance = $runningBalance;
+        }
+
+        $customer = $userId ? User::find($userId) : null;
+
+        return $this->sendResponse([
+            'rows'      => $rows,
+            'customer'  => $customer,
+            'date_from' => $dateFrom,
+            'date_to'   => $dateTo,
+        ], '');
+    }
+
+    // ─── SUPPLIER LEDGER ──────────────────────────────────────────────────
+
+    public function supplierLedger(Request $request)
+    {
+        $companyId = company()->id;
+        $dateFrom  = $request->date_from ?? '2000-01-01';
+        $dateTo    = $request->date_to   ?? now()->toDateString();
+        $userId    = $request->user_id   ?? null;
+
+        // Purchases (credit: increases amount owed to supplier)
+        $purchaseQuery = Order::select(
+                'order_date as date',
+                'invoice_number as reference',
+                DB::raw("'Purchase' as type"),
+                DB::raw('0 as debit'),
+                'total as credit',
+                'user_id'
+            )
+            ->where('company_id', $companyId)
+            ->whereIn('order_type', ['purchases', 'grn'])
+            ->whereBetween('order_date', [$dateFrom, $dateTo]);
+
+        // Purchase Returns (debit: reduces amount owed to supplier)
+        $returnQuery = Order::select(
+                'order_date as date',
+                'invoice_number as reference',
+                DB::raw("'Purchase Return' as type"),
+                'total as debit',
+                DB::raw('0 as credit'),
+                'user_id'
+            )
+            ->where('company_id', $companyId)
+            ->whereIn('order_type', ['purchase-returns'])
+            ->whereBetween('order_date', [$dateFrom, $dateTo]);
+
+        // Payments out (debit: we paid supplier, reduces balance owed)
+        $paymentQuery = Payment::select(
+                DB::raw('DATE(date) as date'),
+                'payment_number as reference',
+                DB::raw("'Payment Made' as type"),
+                'amount as debit',
+                DB::raw('0 as credit'),
+                'user_id'
+            )
+            ->where('company_id', $companyId)
+            ->where('payment_type', 'out')
+            ->whereBetween(DB::raw('DATE(date)'), [$dateFrom, $dateTo]);
+
+        if ($userId) {
+            $purchaseQuery->where('user_id', $userId);
+            $returnQuery->where('user_id', $userId);
+            $paymentQuery->where('user_id', $userId);
+        }
+
+        $rows = $purchaseQuery->union($returnQuery)->union($paymentQuery)
+            ->orderBy('date')->orderBy('reference')
+            ->get();
+
+        $runningBalance = 0;
+        foreach ($rows as $row) {
+            $runningBalance += ($row->credit - $row->debit);
+            $row->running_balance = $runningBalance;
+        }
+
+        $supplier = $userId ? User::find($userId) : null;
+
+        return $this->sendResponse([
+            'rows'      => $rows,
+            'supplier'  => $supplier,
             'date_from' => $dateFrom,
             'date_to'   => $dateTo,
         ], '');
