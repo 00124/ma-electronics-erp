@@ -38,7 +38,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd /home/runner/workspace/laravel && PHP_CLI_SERVER_WORKERS=2 php -S 0.0.0.0:5000 -t public server.php"
+args = "npm run dev"
 waitForPort = 5000
 
 [userenv]
