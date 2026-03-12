@@ -238,6 +238,23 @@
                         >
                             {{ $t("menu.print_barcodes") }}
                         </a-menu-item>
+                        <a-menu-item
+                            @click="
+                                () => {
+                                    menuSelected();
+                                    $router.push({
+                                        name: 'admin.product_stock_import.index',
+                                    });
+                                }
+                            "
+                            key="product_stock_import"
+                            v-if="
+                                permsArray.includes('products_view') ||
+                                permsArray.includes('admin')
+                            "
+                        >
+                            Import Products
+                        </a-menu-item>
                     </a-sub-menu>
 
                     <a-sub-menu

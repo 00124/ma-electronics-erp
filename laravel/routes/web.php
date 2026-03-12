@@ -75,6 +75,11 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::post('customer-suppliers', ['as' => 'api.payments.customer-suppliers', 'uses' => 'PaymentController@customerSuppliers']);
         ApiRoute::resource('payments', 'PaymentInController', ['as' => 'api', 'only' => ['index']]);
 
+        // Product Stock Import (from Excel)
+        ApiRoute::get('product-stock-import/warehouses', ['as' => 'api.product-stock-import.warehouses', 'uses' => 'ProductStockImportController@warehouses']);
+        ApiRoute::post('product-stock-import/preview', ['as' => 'api.product-stock-import.preview', 'uses' => 'ProductStockImportController@preview']);
+        ApiRoute::post('product-stock-import/import', ['as' => 'api.product-stock-import.import', 'uses' => 'ProductStockImportController@import']);
+
         // Imports
         ApiRoute::post('brands/import', ['as' => 'api.brands.import', 'uses' => 'BrandController@import']);
         ApiRoute::post('categories/import', ['as' => 'api.categories.import', 'uses' => 'CategoryController@import']);

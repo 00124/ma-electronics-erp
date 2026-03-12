@@ -63,6 +63,18 @@ export default [
                     permission: "products_view",
                 },
             },
+            {
+                path: "/admin/product-stock-import",
+                component: () =>
+                    import("../views/product-manager/import/index.vue"),
+                name: "admin.product_stock_import.index",
+                meta: {
+                    requireAuth: true,
+                    menuParent: "product_manager",
+                    menuKey: (route) => "product_stock_import",
+                    permission: "products_view",
+                },
+            },
         ],
     },
 ];
