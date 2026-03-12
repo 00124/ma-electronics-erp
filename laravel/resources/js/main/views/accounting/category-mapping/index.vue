@@ -156,13 +156,13 @@ import { defineComponent, ref, computed, onMounted } from 'vue';
 import { SaveOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import AdminPageHeader from '../../../../common/layouts/AdminPageHeader.vue';
-import axios from 'axios';
 
 export default defineComponent({
     name: 'CategoryAccountingMapping',
     components: { AdminPageHeader, SaveOutlined },
 
     setup() {
+        const axiosAdmin = window.axiosAdmin;
         const loading   = ref(false);
         const saving    = ref(false);
         const search    = ref('');
@@ -216,8 +216,8 @@ export default defineComponent({
         const load = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/v1/accounting/category-mappings');
-                const data = res.data?.data ?? res.data;
+                const res = await axiosAdmin.get('accounting/category-mappings');
+                const data = res.data ?? res;
                 categories.value = (data.categories || []).map(c => ({
                     ...c,
                     _dirty:  false,
@@ -235,7 +235,7 @@ export default defineComponent({
         const saveOne = async (record) => {
             record._saving = true;
             try {
-                await axios.put(`/api/v1/accounting/category-mappings/${record.id}`, {
+                await axiosAdmin.put(`accounting/category-mappings/${record.id}`, {
                     sales_account_id:     record.sales_account_id     || null,
                     cogs_account_id:      record.cogs_account_id      || null,
                     inventory_account_id: record.inventory_account_id || null,
@@ -264,8 +264,8 @@ export default defineComponent({
                     inventory_account_id: c.inventory_account_id || null,
                     purchase_account_id:  c.purchase_account_id  || null,
                 }));
-                const res = await axios.post('/api/v1/accounting/category-mappings/bulk', { mappings });
-                const updated = res.data?.data?.updated ?? res.data?.updated ?? dirty.length;
+                const res = await axiosAdmin.post('accounting/category-mappings/bulk', { mappings });
+                const updated = res.data?.updated ?? res.updated ?? dirty.length;
                 dirty.forEach(c => { c._dirty = false; });
                 message.success(`${updated} category mappings saved successfully`);
             } catch (e) {
