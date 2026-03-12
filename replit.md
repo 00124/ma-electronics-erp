@@ -1,13 +1,10 @@
-# Stockify ERP - Replit.md
+# MA Electronics ERP - Replit.md
 
 ## Overview
 
-Stockify is an inventory/ERP management web application (inspired by "Stockifly") that helps businesses manage products, brands, categories, and related business data. The project has two distinct parts:
+MA Electronics ERP is a full-featured inventory/ERP management system built on **Laravel 12 + Vue 3** (Stockifly-based). The active application is the Laravel + Vue.js SPA in the `laravel/` directory.
 
-1. **Active Node.js/React frontend** (`client/` and `server/`) — the primary application being built on Replit, using React + Express + Drizzle ORM with a MySQL backend.
-2. **Reference Laravel application** (`laravel/` and `attached_assets/`) — an existing PHP/Vue.js version of Stockifly (v4.3.3) included as reference material/assets. This is **not** the active application; it serves as a design/feature reference.
-
-The active application displays a dashboard with stats, plus pages for Products, Brands, and Categories. It connects to a remote MySQL database.
+The `client/`, `server/`, and `shared/` directories contain a legacy minimal React/Node.js prototype that is **no longer the running application**.
 
 ---
 
@@ -17,88 +14,112 @@ Preferred communication style: Simple, everyday language.
 
 ---
 
+## Running the App
+
+**Workflow command:**
+```
+cd /home/runner/workspace/laravel && PHP_CLI_SERVER_WORKERS=4 php -S 0.0.0.0:5000 -t public server.php
+```
+
+The PHP built-in server serves the Laravel app on port 5000. Vue.js assets are pre-built into `laravel/public/build/`.
+
+## Admin Login
+- Email: `123asaid@gmail.com`
+- Password: `Admin@1234`
+
+---
+
 ## System Architecture
 
-### Frontend (React/TypeScript)
+### Backend (Laravel 12 / PHP 8.2)
+- **Framework**: Laravel 12 with PHP 8.2
+- **Auth**: JWT via `php-open-source-saver/jwt-auth`
+- **API**: RESTful API using `examyou/rest-api` package with `ApiRoute`
+- **Entry**: `laravel/public/index.php` → served by `php -S` via `server.php`
+- **Routes**: `laravel/routes/web.php`
+- **Controllers**: `laravel/app/Http/Controllers/Api/`
 
-- **Framework**: React 18 with TypeScript, bundled via Vite
-- **Routing**: `wouter` (lightweight client-side routing)
-- **State/Data Fetching**: TanStack React Query v5 for server state management; all API calls go through `client/src/lib/queryClient.ts`
-- **UI Components**: shadcn/ui (Radix UI primitives + Tailwind CSS) in "new-york" style. Custom core components are exported from `@/components/ui/core`
-- **Animations**: Framer Motion for page transitions and UI animations
-- **Charts**: Recharts for dashboard data visualization
-- **Styling**: Tailwind CSS with CSS custom properties for theming (light/dark mode supported). Fonts: Plus Jakarta Sans (body) and Outfit (display/headings)
-- **Path aliases**: `@/` maps to `client/src/`, `@shared/` maps to `shared/`
-
-### Backend (Express/TypeScript)
-
-- **Framework**: Express.js running on Node.js, started via `tsx server/index.ts`
-- **Entry point**: `server/index.ts` → registers routes → serves static files in production
-- **Routes**: Defined in `server/routes.ts`, using a shared route definition object from `shared/routes.ts` (typed, Zod-validated route contracts)
-- **Storage layer**: `server/storage.ts` exposes a `DatabaseStorage` class implementing `IStorage` interface. This keeps database logic separate from route handlers.
-- **Development**: Vite dev server runs in middleware mode (via `server/vite.ts`) so both frontend HMR and API calls share a single port
-
-### Shared Layer
-
-- `shared/schema.ts` — Drizzle ORM table definitions (MySQL dialect) for all database tables
-- `shared/relations.ts` — Drizzle ORM relation definitions
-- `shared/routes.ts` — API route contracts shared between client and server (path, method, Zod response schemas). This ensures type-safe API calls from the frontend.
+### Frontend (Vue 3 + Ant Design Vue)
+- **Framework**: Vue 3 SPA
+- **UI Library**: Ant Design Vue 4
+- **State**: Vuex 4
+- **Router**: Vue Router 4
+- **Build Tool**: Vite 5
+- **Assets**: Pre-built to `laravel/public/build/`
+- **Entry**: `laravel/resources/js/app.js`
+- **Pages**: `laravel/resources/js/main/views/`
+- **Router**: `laravel/resources/js/main/router/`
+- **Layouts**: `laravel/resources/js/common/layouts/`
 
 ### Database
+- **Database**: MySQL (remote Hostinger at `193.203.168.212`)
+- **DB Name**: `u931777367_MEMERPDB`
+- **ORM**: Laravel Eloquent
+- **Connection**: Set via `MYSQL_DATABASE_URL` env var or `laravel/.env`
 
-- **Database**: MySQL (remote hosted at `193.203.168.212`)
-- **ORM**: Drizzle ORM with `mysql2` driver
-- **Schema**: Very large schema covering: products, brands, categories, companies, users, attendances, leaves, holidays, awards, appreciations, salaries, warehouses, currencies, subscriptions, and more
-- **Migrations**: Managed via `drizzle-kit push` (dialect: mysql). Migration files in `drizzle/` and `migrations/`
-- **Connection**: Set via `MYSQL_DATABASE_URL` or `DATABASE_URL` environment variable
+---
 
-### Build System
+## Key Files
+- `laravel/.env` — Laravel environment config (DB, APP_URL, JWT_SECRET)
+- `laravel/resources/views/welcome.blade.php` — main blade entry (includes license bypass + asset loading)
+- `laravel/public/build/manifest.json` — Vite asset manifest
+- `laravel/public/build/assets/` — compiled JS/CSS bundles
 
-- **Client build**: Vite outputs to `dist/public/`
-- **Server build**: esbuild bundles `server/index.ts` to `dist/index.cjs`, with a curated allowlist of dependencies to bundle (reducing cold start times)
-- **Build script**: `script/build.ts` orchestrates both builds sequentially
+---
 
-### API Design Pattern
+## Rebuild Workflow (After Source JS Changes)
 
-Routes are defined once in `shared/routes.ts` as typed objects with path, method, and Zod response schemas. Both the server (to implement) and client (to call) reference this same object. This avoids magic strings and provides end-to-end type safety.
+```bash
+cd /home/runner/workspace/laravel
+node_modules/.bin/vite build
+```
 
-Current implemented API endpoints:
-- `GET /api/products` — list all products
-- `GET /api/products/:id` — get single product
-- `GET /api/brands` — list all brands
-- `GET /api/categories` — list all categories
+Then apply license bypass patches to the new bundle:
+```bash
+cd public/build/assets
+# Check the variable name first (it changes between builds):
+grep -o "verified_name:..,value:.\{1,5\}" app-*.js | head -2
+# Apply patches (replace XX with the actual 2-char variable found above):
+sed -i 's/verified_name:XX,value:!1}/verified_name:XX,value:!0}/g' app-*.js
+sed -i 's/appChecking:!0,em/appChecking:!1,em/g' app-*.js
+```
 
-Write operations (create, update, delete) are UI mock mutations that show toast errors when the unimplemented endpoints return errors — the UI is built ahead of the backend endpoints.
+---
+
+## Features
+
+### Implemented
+- **Dashboard** — Sales summary, charts, recent orders
+- **Products** — CRUD, barcode generation, Excel import
+- **Stock Management** — GRN (Goods Receipt Note), stock transfers
+- **POS** — Point of Sale with warehouse selector, customer quick-add, salesman selection
+- **Gate Pass** — Printable gate pass document
+- **Purchases** — Purchase orders
+- **Sales** — Sales orders, invoice printing
+- **Brands / Categories / Warehouses** — Master data management
+- **Users / Roles** — User management with RBAC
+- **Reports** — Various ERP reports
+
+### Key Custom Additions (MA Electronics)
+- GRN with received quantity tracking
+- POS customer quick-add (search by phone, auto-create)
+- POS salesman selection
+- Gate Pass with warehouse/salesman info
+- Invoice showroom-style layout
+- Excel import for products and stock
+- Company logo on printed documents
+
+---
+
+## Codeifly License Bypass (Critical)
+The app requires a license check that is bypassed in two places:
+1. **`welcome.blade.php`** — XHR/fetch intercept returns fake verified response for codeifly.com calls
+2. **Bundle patch** — Applied after each `vite build` (see Rebuild Workflow above)
 
 ---
 
 ## External Dependencies
-
-### Database
-- **MySQL** — Remote MySQL server at `193.203.168.212`, database `u931777367_MEMERPDB`. Connection credentials should be stored in `MYSQL_DATABASE_URL` or `DATABASE_URL` environment variable (not hardcoded in production).
-
-### Key npm Packages
-| Package | Purpose |
-|---|---|
-| `drizzle-orm` + `mysql2` | Database ORM and MySQL driver |
-| `express` | HTTP server |
-| `@tanstack/react-query` | Client-side data fetching and caching |
-| `wouter` | Client-side routing |
-| `framer-motion` | Animations and page transitions |
-| `recharts` | Charts and data visualization |
-| `zod` | Schema validation for API responses |
-| `shadcn/ui` (Radix UI) | Accessible UI component primitives |
-| `tailwindcss` | Utility-first CSS framework |
-| `lucide-react` | Icon set |
-| `clsx` + `tailwind-merge` | Class name utilities |
-| `vite` | Frontend build tool and dev server |
-| `tsx` | TypeScript execution for dev/build scripts |
-| `esbuild` | Server bundle build |
-
-### Replit-specific Plugins (dev only)
-- `@replit/vite-plugin-runtime-error-modal` — shows runtime errors as overlay
-- `@replit/vite-plugin-cartographer` — Replit source mapping
-- `@replit/vite-plugin-dev-banner` — Replit dev banner
-
-### Reference/Unused in Active App
-The `laravel/` folder contains a full Laravel 12 + Vue 3 application (the original Stockifly). It has its own `composer.json`, `package.json`, and `vite.config.js`. This is **reference only** and should not be modified or deployed. Payment integrations in the Laravel app include: Stripe, PayPal, Razorpay, Mollie, Authorize.Net.
+- **MySQL** — Remote Hostinger MySQL at `193.203.168.212`
+- **PHP 8.2** — Available in Replit nix environment
+- **Composer 2** — PHP dependency manager
+- **Node.js 20** — For Vite asset builds

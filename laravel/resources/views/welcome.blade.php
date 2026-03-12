@@ -176,7 +176,18 @@
             };
         })();
         </script>
-        @vite('resources/js/app.js')
+        <?php
+            $viteManifest = json_decode(file_get_contents(public_path('build/manifest.json')), true);
+            $appEntry = $viteManifest['resources/js/app.js'] ?? [];
+            $appJs = $appEntry['file'] ?? '';
+            $appCss = $appEntry['css'][0] ?? '';
+        ?>
+        @if($appCss)
+        <link rel="stylesheet" href="/build/{{ $appCss }}">
+        @endif
+        @if($appJs)
+        <script type="module" src="/build/{{ $appJs }}"></script>
+        @endif
         <script>
         (function() {
             var attempts = 0;
