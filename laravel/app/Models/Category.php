@@ -7,12 +7,15 @@ use App\Classes\Common;
 use App\Models\BaseModel;
 use App\Scopes\CompanyScope;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Models\ChartOfAccount;
+use App\Models\Product;
 
 class Category extends BaseModel
 {
     protected $table = 'categories';
 
-    protected $default = ['id', 'xid', 'name', 'slug', 'parent_id', 'x_parent_id', 'image', 'image_url'];
+    protected $default = ['id', 'xid', 'name', 'slug', 'parent_id', 'x_parent_id', 'image', 'image_url',
+                          'sales_account_id', 'cogs_account_id', 'inventory_account_id'];
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
@@ -53,5 +56,25 @@ class Category extends BaseModel
     public function childs()
     {
         return $this->subcategories()->with('childs');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id');
+    }
+
+    public function salesAccount()
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'sales_account_id', 'id');
+    }
+
+    public function cogsAccount()
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id', 'id');
+    }
+
+    public function inventoryAccount()
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id', 'id');
     }
 }

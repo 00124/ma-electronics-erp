@@ -34,4 +34,9 @@ class Brand extends BaseModel
 
         return $this->image == null ? asset('images/brand.png') : Common::getFileUrl($brandLogoPath, $this->image);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
+    }
 }
