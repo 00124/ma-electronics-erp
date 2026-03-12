@@ -94,11 +94,11 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vu
 import { message } from 'ant-design-vue';
 import AdminPageHeader from '../../../../common/layouts/AdminPageHeader.vue';
 import { useI18n } from 'vue-i18n';
-import axios from 'axios';
 
 export default defineComponent({
     components: { AdminPageHeader, PlusOutlined, EditOutlined, DeleteOutlined },
     setup() {
+        const axiosAdmin = window.axiosAdmin;
         const { t } = useI18n();
         const loading = ref(false);
         const saving = ref(false);
@@ -126,8 +126,8 @@ export default defineComponent({
         const loadAccounts = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/v1/accounting/coa');
-                flatAccounts.value = res.data.data.flat || res.data.flat || [];
+                const res = await axiosAdmin.get('accounting/coa');
+                flatAccounts.value = res.data.flat || [];
             } catch (e) { message.error('Failed to load accounts'); }
             finally { loading.value = false; }
         };
@@ -149,10 +149,10 @@ export default defineComponent({
             saving.value = true;
             try {
                 if (editingId.value) {
-                    await axios.put(`/api/v1/accounting/coa/${editingId.value}`, form.value);
+                    await axiosAdmin.put(`accounting/coa/${editingId.value}`, form.value);
                     message.success('Account updated');
                 } else {
-                    await axios.post('/api/v1/accounting/coa', form.value);
+                    await axiosAdmin.post('accounting/coa', form.value);
                     message.success('Account created');
                 }
                 modalVisible.value = false;
@@ -163,7 +163,7 @@ export default defineComponent({
 
         const deleteAccount = async (id) => {
             try {
-                await axios.delete(`/api/v1/accounting/coa/${id}`);
+                await axiosAdmin.delete(`accounting/coa/${id}`);
                 message.success('Account deleted');
                 loadAccounts();
             } catch (e) { message.error(e.response?.data?.message || 'Cannot delete'); }

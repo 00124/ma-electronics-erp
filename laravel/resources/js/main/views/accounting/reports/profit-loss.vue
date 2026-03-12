@@ -82,12 +82,12 @@
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { PrinterOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import AdminPageHeader from '../../../../common/layouts/AdminPageHeader.vue';
-import axios from 'axios';
 import dayjs from 'dayjs';
 
 export default defineComponent({
     components: { AdminPageHeader, PrinterOutlined, SearchOutlined },
     setup() {
+        const axiosAdmin = window.axiosAdmin;
         const loading = ref(false);
         const filters = ref({ date_from: dayjs().startOf('year'), date_to: dayjs() });
         const data = ref({ data: [], total_revenue: 0, total_cogs: 0, gross_profit: 0, total_expenses: 0, net_profit: 0, date_from: '', date_to: '' });
@@ -102,8 +102,8 @@ export default defineComponent({
         const load = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/v1/accounting/reports/profit-loss', { params: { date_from: filters.value.date_from?.format('YYYY-MM-DD'), date_to: filters.value.date_to?.format('YYYY-MM-DD') } });
-                data.value = res.data.data;
+                const res = await axiosAdmin.get('accounting/reports/profit-loss', { params: { date_from: filters.value.date_from?.format('YYYY-MM-DD'), date_to: filters.value.date_to?.format('YYYY-MM-DD') } });
+                data.value = res.data;
             } catch (e) {} finally { loading.value = false; }
         };
 

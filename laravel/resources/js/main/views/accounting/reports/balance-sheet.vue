@@ -84,12 +84,12 @@
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { PrinterOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import AdminPageHeader from '../../../../common/layouts/AdminPageHeader.vue';
-import axios from 'axios';
 import dayjs from 'dayjs';
 
 export default defineComponent({
     components: { AdminPageHeader, PrinterOutlined, SearchOutlined },
     setup() {
+        const axiosAdmin = window.axiosAdmin;
         const loading = ref(false);
         const filters = ref({ as_of: dayjs() });
         const data = ref({ data: [], total_assets: 0, total_liabilities: 0, total_equity: 0, as_of: '' });
@@ -105,8 +105,8 @@ export default defineComponent({
         const load = async () => {
             loading.value = true;
             try {
-                const res = await axios.get('/api/v1/accounting/reports/balance-sheet', { params: { as_of: filters.value.as_of?.format('YYYY-MM-DD') } });
-                data.value = res.data.data;
+                const res = await axiosAdmin.get('accounting/reports/balance-sheet', { params: { as_of: filters.value.as_of?.format('YYYY-MM-DD') } });
+                data.value = res.data;
             } catch (e) {} finally { loading.value = false; }
         };
 

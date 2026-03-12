@@ -91,12 +91,12 @@
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { PrinterOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import AdminPageHeader from '../../../../common/layouts/AdminPageHeader.vue';
-import axios from 'axios';
 import dayjs from 'dayjs';
 
 export default defineComponent({
     components: { AdminPageHeader, PrinterOutlined, SearchOutlined },
     setup() {
+        const axiosAdmin = window.axiosAdmin;
         const loading   = ref(false);
         const generated = ref(false);
         const suppliers = ref([]);
@@ -122,22 +122,22 @@ export default defineComponent({
         const closingBalance = computed(() => totalCredit.value - totalDebit.value);
 
         const loadSuppliers = async () => {
-            const res = await axios.get('/api/v1/users?user_type=supplier&limit=500');
-            suppliers.value = res.data.data || [];
+            const res = await axiosAdmin.get('users?user_type=supplier&limit=500');
+            suppliers.value = res.data || [];
         };
 
         const load = async () => {
             loading.value = true;
             generated.value = true;
             try {
-                const res = await axios.get('/api/v1/accounting/reports/supplier-ledger', {
+                const res = await axiosAdmin.get('accounting/reports/supplier-ledger', {
                     params: {
                         user_id:   filters.value.user_id || undefined,
                         date_from: filters.value.date_from?.format('YYYY-MM-DD'),
                         date_to:   filters.value.date_to?.format('YYYY-MM-DD'),
                     }
                 });
-                reportData.value = res.data.data;
+                reportData.value = res.data;
             } catch (e) {} finally { loading.value = false; }
         };
 

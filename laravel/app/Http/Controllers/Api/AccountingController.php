@@ -106,7 +106,7 @@ class AccountingController extends ApiBaseController
         if ($request->date_to)   $q->where('entry_date', '<=', $request->date_to);
 
         $entries = $q->paginate($request->per_page ?? 20);
-        return $this->sendResponse($entries, '');
+        return $this->sendResponse($entries->toArray(), '');
     }
 
     public function journalStore(Request $request)
