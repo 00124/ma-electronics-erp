@@ -80,6 +80,20 @@ ApiRoute::group(['namespace' => 'App\Http\Controllers\Api'], function () {
         ApiRoute::post('product-stock-import/preview', ['as' => 'api.product-stock-import.preview', 'uses' => 'ProductStockImportController@preview']);
         ApiRoute::post('product-stock-import/import', ['as' => 'api.product-stock-import.import', 'uses' => 'ProductStockImportController@import']);
 
+        // Accounting
+        ApiRoute::get('accounting/coa', ['as' => 'api.accounting.coa.index', 'uses' => 'AccountingController@coaIndex']);
+        ApiRoute::post('accounting/coa', ['as' => 'api.accounting.coa.store', 'uses' => 'AccountingController@coaStore']);
+        ApiRoute::put('accounting/coa/{id}', ['as' => 'api.accounting.coa.update', 'uses' => 'AccountingController@coaUpdate']);
+        ApiRoute::delete('accounting/coa/{id}', ['as' => 'api.accounting.coa.destroy', 'uses' => 'AccountingController@coaDestroy']);
+        ApiRoute::get('accounting/journal-entries', ['as' => 'api.accounting.journal.index', 'uses' => 'AccountingController@journalIndex']);
+        ApiRoute::post('accounting/journal-entries', ['as' => 'api.accounting.journal.store', 'uses' => 'AccountingController@journalStore']);
+        ApiRoute::get('accounting/journal-entries/{id}', ['as' => 'api.accounting.journal.show', 'uses' => 'AccountingController@journalShow']);
+        ApiRoute::delete('accounting/journal-entries/{id}', ['as' => 'api.accounting.journal.destroy', 'uses' => 'AccountingController@journalDestroy']);
+        ApiRoute::get('accounting/reports/trial-balance', ['as' => 'api.accounting.trial-balance', 'uses' => 'AccountingController@trialBalance']);
+        ApiRoute::get('accounting/reports/profit-loss', ['as' => 'api.accounting.profit-loss', 'uses' => 'AccountingController@profitLoss']);
+        ApiRoute::get('accounting/reports/balance-sheet', ['as' => 'api.accounting.balance-sheet', 'uses' => 'AccountingController@balanceSheet']);
+        ApiRoute::get('accounting/reports/general-ledger', ['as' => 'api.accounting.general-ledger', 'uses' => 'AccountingController@generalLedger']);
+
         // Imports
         ApiRoute::post('brands/import', ['as' => 'api.brands.import', 'uses' => 'BrandController@import']);
         ApiRoute::post('categories/import', ['as' => 'api.categories.import', 'uses' => 'CategoryController@import']);

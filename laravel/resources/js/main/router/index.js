@@ -21,6 +21,7 @@ import PayrollRoutes from "./hrm/payroll";
 import AppreciationRoutes from "./hrm/appreciations";
 import HrmDashboardRoutes from "./hrm/hrmDashboard";
 import HrmSettingsRoutes from "./hrm/hrmSettings";
+import AccountingRoutes from "./accounting";
 import { checkUserPermission } from "../../common/scripts/functions";
 
 import FrontRoutes from "./front";
@@ -77,6 +78,7 @@ const router = createRouter({
         ...AppreciationRoutes,
         ...HrmDashboardRoutes,
         ...HrmSettingsRoutes,
+        ...AccountingRoutes,
     ],
     scrollBehavior: () => ({ left: 0, top: 0 }),
 });

@@ -565,6 +565,36 @@
                         </a-menu-item>
                     </a-sub-menu>
 
+                    <!-- Accounting -->
+                    <a-sub-menu key="accounting" v-if="permsArray.includes('admin')">
+                        <template #title>
+                            <span>
+                                <AccountBookOutlined />
+                                <span>Accounting</span>
+                            </span>
+                        </template>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.coa.index' }); }"
+                            key="accounting_coa"
+                        >Chart of Accounts</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.journal.index' }); }"
+                            key="accounting_journal"
+                        >Journal Entries</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.trial_balance' }); }"
+                            key="accounting_trial_balance"
+                        >Trial Balance</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.profit_loss' }); }"
+                            key="accounting_profit_loss"
+                        >Profit & Loss</a-menu-item>
+                        <a-menu-item
+                            @click="() => { menuSelected(); $router.push({ name: 'admin.accounting.balance_sheet' }); }"
+                            key="accounting_balance_sheet"
+                        >Balance Sheet</a-menu-item>
+                    </a-sub-menu>
+
                     <a-menu-item
                         v-if="
                             (permsArray.includes('users_view') ||
@@ -1042,6 +1072,7 @@ import {
     TeamOutlined,
     WalletOutlined,
     BankOutlined,
+    AccountBookOutlined,
     RocketOutlined,
     LaptopOutlined,
     CarOutlined,

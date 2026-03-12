@@ -1,0 +1,214 @@
+I am building an ERP/POS system called **Stocklify** for a **Home Appliances & Electronics retail business**.
+
+Products include:
+
+LED TVs
+Refrigerators
+Air Conditioners
+Washing Machines
+Microwave Ovens
+Kitchen Appliances
+Accessories
+
+The system is built with **Laravel + MySQL**.
+
+I want to implement a **complete Accounting System with Chart of Accounts**.
+
+The system must follow **double-entry accounting** and support **inventory accounting**.
+
+---
+
+1️⃣ Create Chart of Accounts (COA)
+
+Create table:
+
+chart_of_accounts
+
+Fields:
+
+id
+account_code
+account_name
+account_type (Asset, Liability, Equity, Income, Expense, COGS)
+parent_id
+description
+status
+created_at
+updated_at
+
+---
+
+2️⃣ Add Parent Accounts
+
+10000 Assets
+20000 Liabilities
+30000 Equity
+40000 Revenue
+50000 Cost of Goods Sold
+60000 Expenses
+
+---
+
+3️⃣ Add Home Appliances Business Accounts
+
+ASSETS
+
+11001 Cash in Hand
+11002 Bank Account
+11003 Petty Cash
+
+12001 Accounts Receivable
+12002 Installment Customers
+
+13001 LED TV Inventory
+13002 Refrigerator Inventory
+13003 Washing Machine Inventory
+13004 Air Conditioner Inventory
+13005 Microwave Oven Inventory
+13006 Kitchen Appliances Inventory
+13007 Accessories Inventory
+
+---
+
+LIABILITIES
+
+21001 Accounts Payable
+22001 Sales Tax Payable
+23001 Salaries Payable
+23002 Customer Advances
+
+---
+
+EQUITY
+
+31001 Owner Capital
+31002 Owner Drawings
+
+---
+
+REVENUE
+
+41001 LED TV Sales
+41002 Refrigerator Sales
+41003 Washing Machine Sales
+41004 Air Conditioner Sales
+41005 Microwave Sales
+41006 Small Appliances Sales
+
+42001 Delivery Charges Income
+42002 Installation Charges
+42003 Warranty Service Income
+
+---
+
+COST OF GOODS SOLD
+
+51001 Cost of LED TVs
+51002 Cost of Refrigerators
+51003 Cost of Washing Machines
+51004 Cost of Air Conditioners
+51005 Cost of Microwaves
+51006 Cost of Small Appliances
+
+---
+
+EXPENSES
+
+61001 Office Salaries
+61002 Shop Rent
+61003 Electricity Expense
+61004 Internet Expense
+62001 Advertising Expense
+63001 Shop Maintenance
+64001 Delivery Expense
+64002 Vehicle Fuel
+65001 Bank Charges
+
+---
+
+4️⃣ Journal Entry System
+
+Create tables:
+
+journal_entries
+journal_entry_lines
+
+Ensure:
+
+Debit = Credit
+
+---
+
+5️⃣ Automatic Accounting
+
+Sales Transaction
+
+Debit Cash / Accounts Receivable
+Credit Sales Revenue
+
+COGS Entry
+
+Debit Cost of Goods Sold
+Credit Inventory
+
+Purchase
+
+Debit Inventory
+Credit Accounts Payable
+
+Customer Payment
+
+Debit Cash
+Credit Accounts Receivable
+
+Supplier Payment
+
+Debit Accounts Payable
+Credit Cash/Bank
+
+---
+
+6️⃣ Financial Reports
+
+Trial Balance
+Profit & Loss
+Balance Sheet
+General Ledger
+Customer Ledger
+Supplier Ledger
+
+---
+
+7️⃣ UI Pages
+
+Accounting Menu
+
+Chart of Accounts
+Journal Entries
+Trial Balance
+Profit & Loss
+Balance Sheet
+
+COA should display hierarchical tree structure.
+
+---
+
+8️⃣ Integration with ERP
+
+Sales Module → Revenue Account
+Purchase Module → Inventory Account
+Inventory Module → Stock Account
+Payments Module → Cash/Bank
+
+---
+
+Generate:
+
+Laravel migrations
+Models
+Controllers
+Routes
+Blade UI pages
+Seeder for default accounts
+
+Follow **ERP accounting standards like Odoo or ERPNext**.
